@@ -2,9 +2,9 @@
 
 namespace EcoFleet.Application.Exceptions;
 
-public class ValidationException : Exception
+public class ValidationErrorException : Exception
 {
-    public ValidationException(IEnumerable<ValidationFailure> failures)
+    public ValidationErrorException(IEnumerable<ValidationFailure> failures)
         : base("One or more validation errors occurred.")
     {
         Errors = failures

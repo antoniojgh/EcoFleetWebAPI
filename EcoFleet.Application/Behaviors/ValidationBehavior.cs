@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
+using EcoFleet.Application.Exceptions;
 
 namespace EcoFleet.Application.Behaviors;
 
@@ -33,7 +34,7 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
         if (failures.Count != 0)
         {
             // We throw a standard ValidationException (or a custom one if you prefer)
-            throw new ValidationException(failures);
+            throw new ValidationErrorException(failures);
         }
 
         return await next();

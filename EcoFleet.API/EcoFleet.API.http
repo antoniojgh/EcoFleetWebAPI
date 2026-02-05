@@ -1,0 +1,14 @@
+@EcoFleet.API_HostAddress = https://localhost:7205/api/v1/vehicles
+
+# @timeout 120000
+POST {{EcoFleet.API_HostAddress}}
+Content-Type: application/json
+
+
+{
+    "LicensePlate" : "1234-BBC",
+    "Latitude" : 40.416,
+    "Longitude" : -3.703
+}
+
+###
