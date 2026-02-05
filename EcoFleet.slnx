@@ -4,6 +4,8 @@
     <Project Path="EcoFleet.Application/EcoFleet.Application.csproj" />
     <Project Path="EcoFleet.Domain/EcoFleet.Domain.csproj" />
   </Folder>
-  <Folder Name="/Infrastructure/" />
+  <Folder Name="/Infrastructure/">
+    <Project Path="EcoFleet.Infrastructure/EcoFleet.Infrastructure.csproj" />
+  </Folder>
   <Folder Name="/Tests/" />
 </Solution>
