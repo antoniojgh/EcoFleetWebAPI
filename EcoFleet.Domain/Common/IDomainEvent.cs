@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace EcoFleet.Domain.Common
+﻿namespace EcoFleet.Domain.Common
 {
+    // Represents something important that happened in the business.
     public interface IDomainEvent
     {
+        DateTime OcurredOn { get; }
     }
 }

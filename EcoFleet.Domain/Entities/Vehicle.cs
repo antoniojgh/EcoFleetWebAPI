@@ -1,0 +1,59 @@
+﻿using EcoFleet.Domain.Common;
+using EcoFleet.Domain.Enums;
+using EcoFleet.Domain.Exceptions;
+using EcoFleet.Domain.ValueObjects;
+
+namespace EcoFleet.Domain.Entities
+{
+    public class Vehicle : Entity<VehicleId>, IAggregateRoot
+    {
+        public LicensePlate Plate { get; private set; }
+        public VehicleStatus Status { get; private set; }
+        public Geolocation CurrentLocation { get; private set; }
+
+        public Guid? CurrentDriverId { get; private set; }
+
+        // Constructor for EF Core
+        private Vehicle() : base(new VehicleId(Guid.NewGuid())) 
+        { }
+
+        // Public Constructor ensures valid initial state
+        public Vehicle(LicensePlate plate, Geolocation initialLocation) : base(new VehicleId(Guid.NewGuid()))
+        {
+            Plate = plate;
+            CurrentLocation = initialLocation;
+            Status = VehicleStatus.Idle;
+        }
+
+        // --- BEHAVIORS (Methods, not Setters) ---
+
+        public void UpdateTelemetry(Geolocation newLocation)
+        {
+            CurrentLocation = newLocation;
+        }
+
+        public void AssignDriver(Guid driverId)
+        {
+            if (Status == VehicleStatus.Maintenance)
+            {
+                throw new DomainException("Cannot assign a driver to a vehicle in maintenance.");
+            }
+
+            CurrentDriverId = driverId;
+            Status = VehicleStatus.Active;
+
+            // Example: AddDomainEvent(new VehicleDriverAssignedEvent(Id, driverId));
+        }
+
+        public void MarkForMaintenance()
+        {
+            if (Status == VehicleStatus.Active)
+            {
+                throw new DomainException("Cannot maintain a vehicle currently in use.");
+            }
+
+            Status = VehicleStatus.Maintenance;
+            CurrentDriverId = null;
+        }
+    }
+}
