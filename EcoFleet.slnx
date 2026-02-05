@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/API/" />
   <Folder Name="/Core/">
+    <Project Path="EcoFleet.Application/EcoFleet.Application.csproj" />
     <Project Path="EcoFleet.Domain/EcoFleet.Domain.csproj" />
   </Folder>
   <Folder Name="/Infrastructure/" />
