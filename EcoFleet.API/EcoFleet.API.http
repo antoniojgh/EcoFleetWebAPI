@@ -13,3 +13,18 @@ Content-Type: application/json
 }
 
 ###
+
+# @timeout 120000
+PUT {{EcoFleet.API_HostAddress}}/F7936BAB-6CCD-47F2-86A1-13374AF5C51F
+Content-Type: application/json
+
+
+{
+    "Id": "F7936BAB-6CCD-47F2-86A1-13374AF5C51F",
+    "LicensePlate" : "2222-7777",
+    "Latitude" : 0,
+    "Longitude" : 0,
+    "CurrentDriverId" : "d290f1ee-6c54-4b01-90e6-d701748f0851"
+}
+
+###

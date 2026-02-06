@@ -30,7 +30,7 @@ namespace EcoFleet.Infrastructure.Repositories
         {
             // Find all entities that have pending domain events
             var domainEntities = _dbContext.ChangeTracker
-                .Entries<Entity<VehicleId>>() // Or use a generic base type if you have one shared
+                .Entries<IHasDomainEvents>() // Use a generic base type
                 .Where(x => x.Entity.DomainEvents.Any())
                 .Select(x => x.Entity)
                 .ToList();

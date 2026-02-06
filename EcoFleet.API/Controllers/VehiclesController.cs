@@ -1,4 +1,5 @@
 ﻿using EcoFleet.Application.UseCases.Vehicles.Commands.CreateVehicle;
+using EcoFleet.Application.UseCases.Vehicles.Commands.UpdateVehicle;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,6 +24,19 @@ namespace EcoFleet.API.Controllers
             var vehicleId = await _sender.Send(command);
 
             return CreatedAtAction(nameof(CreateVehicle), new { id = vehicleId }, vehicleId);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateVehicle(Guid id, [FromBody] UpdateVehicleCommand command)
+        {
+            if (id != command.Id)
+            {
+                return BadRequest("The ID in the URL does not match the ID in the body.");
+            }
+
+            await _sender.Send(command);
+
+            return NoContent();
         }
     }
 }

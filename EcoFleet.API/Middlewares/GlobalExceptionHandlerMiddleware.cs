@@ -48,8 +48,18 @@ namespace EcoFleet.API.Middlewares
                     };
                     break;
 
+                case NotFoundException notFoundEx:
+                    // 404
+                    statusCode = HttpStatusCode.NotFound; 
+                    response = new
+                    {
+                        Type = "NotFound",
+                        Message = notFoundEx.Message
+                    };
+                    break;
+
                 case DomainException domainEx:
-                    // 400 or 422 - Return the business rule violation message
+                    // 400 - Return the business rule violation message
                     statusCode = HttpStatusCode.BadRequest;
                     response = new
                     {

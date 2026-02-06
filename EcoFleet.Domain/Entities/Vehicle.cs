@@ -71,5 +71,19 @@ namespace EcoFleet.Domain.Entities
             // Raise domain event for maintenance start
             AddDomainEvent(new VehicleMaintenanceStartedEvent(Id, DateTime.UtcNow));
         }
+
+        public void UpdatePlate(LicensePlate plate)
+        {
+            Plate = plate;
+        }
+
+        public void UnassignDriver()
+        {
+            if (Status == VehicleStatus.Maintenance)
+                 return;
+
+            CurrentDriverId = null;
+            Status = VehicleStatus.Idle;
+        }
     }
 }

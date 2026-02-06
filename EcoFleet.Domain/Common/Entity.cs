@@ -1,6 +1,6 @@
 ﻿namespace EcoFleet.Domain.Common
 {
-    public abstract class Entity<TId> : IEquatable<Entity<TId>>
+    public abstract class Entity<TId> : IEquatable<Entity<TId>>, IHasDomainEvents
     {
         public TId Id { get; protected set; }
 
