@@ -1,4 +1,5 @@
 ﻿using EcoFleet.Application.UseCases.Vehicles.Commands.CreateVehicle;
+using EcoFleet.Application.UseCases.Vehicles.Commands.MarkForMaintenance;
 using EcoFleet.Application.UseCases.Vehicles.Commands.UpdateVehicle;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +35,15 @@ namespace EcoFleet.API.Controllers
                 return BadRequest("The ID in the URL does not match the ID in the body.");
             }
 
+            await _sender.Send(command);
+
+            return NoContent();
+        }
+
+        [HttpPatch("maintenance/{id}")]
+        public async Task<IActionResult> MarkForMaintenance(Guid id)
+        {
+            var command = new MarkForMaintenanceCommand(id);
             await _sender.Send(command);
 
             return NoContent();
