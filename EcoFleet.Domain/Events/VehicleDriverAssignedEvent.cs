@@ -6,7 +6,7 @@ namespace EcoFleet.Domain.Events
     public record VehicleDriverAssignedEvent(
 
         VehicleId VehicleId,
-        Guid DriverId,
+        DriverId DriverId,
         DateTime OcurredOn
     ) : IDomainEvent;
 }

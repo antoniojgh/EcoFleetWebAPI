@@ -8,7 +8,8 @@ Content-Type: application/json
 {
     "LicensePlate" : "1234-BBC",
     "Latitude" : 40.416,
-    "Longitude" : -3.703
+    "Longitude" : -3.703,
+    "CurrentDriverId" : "d290f1ee-6c54-4b01-90e6-d701748f0851"
 }
 
 ###

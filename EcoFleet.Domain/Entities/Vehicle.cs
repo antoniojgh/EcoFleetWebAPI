@@ -12,7 +12,7 @@ namespace EcoFleet.Domain.Entities
         public VehicleStatus Status { get; private set; }
         public Geolocation CurrentLocation { get; private set; }
 
-        public Guid? CurrentDriverId { get; private set; }
+        public DriverId? CurrentDriverId { get; private set; }
 
         // Constructor for EF Core
         private Vehicle() : base(new VehicleId(Guid.NewGuid())) 
@@ -26,6 +26,17 @@ namespace EcoFleet.Domain.Entities
             Status = VehicleStatus.Idle;
         }
 
+        public Vehicle(LicensePlate plate, Geolocation initialLocation, DriverId initialDriverId ) : base(new VehicleId(Guid.NewGuid()))
+        {
+            Plate = plate;
+            CurrentLocation = initialLocation;
+            CurrentDriverId = initialDriverId;
+            Status = VehicleStatus.Active;
+
+            // Raise domain event for driver assignment
+            AddDomainEvent(new VehicleDriverAssignedEvent(Id, initialDriverId, DateTime.UtcNow));
+        }
+
         // --- BEHAVIORS (Methods, not Setters) ---
 
         public void UpdateTelemetry(Geolocation newLocation)
@@ -33,7 +44,7 @@ namespace EcoFleet.Domain.Entities
             CurrentLocation = newLocation;
         }
 
-        public void AssignDriver(Guid driverId)
+        public void AssignDriver(DriverId driverId)
         {
             if (Status == VehicleStatus.Maintenance)
             {

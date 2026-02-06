@@ -6,6 +6,7 @@ namespace EcoFleet.Application.UseCases.Vehicles.Commands.CreateVehicle
     public record CreateVehicleCommand(
         string LicensePlate,
         double Latitude,
-        double Longitude
+        double Longitude,
+        Guid? CurrentDriverId
     ) : IRequest<Guid>;
 }

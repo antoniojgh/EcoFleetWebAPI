@@ -17,7 +17,7 @@ namespace EcoFleet.Infrastructure
                 options.UseSqlServer(connectionString));
 
             // 2. Register Repositories
-            services.AddScoped<IVehicleRepository, VehicleRepository>();
+            services.AddScoped<IRepositoryVehicle, RepositoryVehicle>();
 
             // 3. Register Unit of Work
             services.AddScoped<IUnitOfWork, UnitOfWork>();

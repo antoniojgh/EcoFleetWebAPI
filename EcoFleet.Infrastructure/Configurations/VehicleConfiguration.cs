@@ -44,6 +44,9 @@ public class VehicleConfiguration : IEntityTypeConfiguration<Vehicle>
 
         // 5. Foreign Key (Nullable)
         builder.Property(v => v.CurrentDriverId)
+            .HasConversion(
+                id => id != null ? id.Value : (Guid?)null,
+                value => value.HasValue ? new DriverId(value.Value) : null)
             .IsRequired(false);
     }
 }
