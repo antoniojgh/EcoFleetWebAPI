@@ -1,4 +1,5 @@
 ﻿using EcoFleet.Application.UseCases.Vehicles.Commands.CreateVehicle;
+using EcoFleet.Application.UseCases.Vehicles.Commands.DeleteVehicle;
 using EcoFleet.Application.UseCases.Vehicles.Commands.MarkForMaintenance;
 using EcoFleet.Application.UseCases.Vehicles.Commands.UpdateVehicle;
 using MediatR;
@@ -44,6 +45,15 @@ namespace EcoFleet.API.Controllers
         public async Task<IActionResult> MarkForMaintenance(Guid id)
         {
             var command = new MarkForMaintenanceCommand(id);
+            await _sender.Send(command);
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteVehicle(Guid id)
+        {
+            var command = new DeleteVehicleCommand(id);
             await _sender.Send(command);
 
             return NoContent();
