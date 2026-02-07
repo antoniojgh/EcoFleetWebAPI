@@ -1,6 +1,11 @@
 @EcoFleet.API_HostAddress = https://localhost:7205/api/v1/vehicles
 
 # @timeout 120000
+GET {{EcoFleet.API_HostAddress}}/10056BCF-2843-4EF7-9A5D-CF750E6FD06A
+
+###
+
+# @timeout 120000
 POST {{EcoFleet.API_HostAddress}}
 Content-Type: application/json
 

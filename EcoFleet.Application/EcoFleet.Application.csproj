@@ -16,8 +16,4 @@
     <ProjectReference Include="..\EcoFleet.Domain\EcoFleet.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="UseCases\Vehicles\Queries\" />
-  </ItemGroup>
-
 </Project>
