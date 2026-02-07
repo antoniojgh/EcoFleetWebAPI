@@ -1,5 +1,6 @@
 using EcoFleet.Application.Exceptions;
 using EcoFleet.Application.Interfaces.Data;
+using EcoFleet.Application.UseCases.Vehicles.Queries.DTOs;
 using EcoFleet.Domain.Entities;
 using MediatR;
 

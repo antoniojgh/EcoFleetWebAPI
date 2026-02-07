@@ -25,7 +25,7 @@ namespace EcoFleet.Infrastructure.Repositories
             return await _context.Set<T>().ToListAsync(cancellationToken);
         }
 
-        public async Task<int> GetTotalRecordsAsync(CancellationToken cancellationToken = default)
+        public async Task<int> GetTotalNumberOfRecords(CancellationToken cancellationToken = default)
         {
             return await _context.Set<T>().CountAsync(cancellationToken);
         }

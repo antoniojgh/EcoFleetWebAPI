@@ -1,7 +1,7 @@
 using EcoFleet.Domain.Entities;
 using EcoFleet.Domain.Enums;
 
-namespace EcoFleet.Application.UseCases.Vehicles.Queries.GetVehicleById
+namespace EcoFleet.Application.UseCases.Vehicles.Queries.DTOs
 {
     public record VehicleDetailDTO(
         Guid Id,

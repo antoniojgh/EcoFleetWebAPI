@@ -2,6 +2,7 @@
 using EcoFleet.Application.UseCases.Vehicles.Commands.DeleteVehicle;
 using EcoFleet.Application.UseCases.Vehicles.Commands.MarkForMaintenance;
 using EcoFleet.Application.UseCases.Vehicles.Commands.UpdateVehicle;
+using EcoFleet.Application.UseCases.Vehicles.Queries.GetAllVehicle;
 using EcoFleet.Application.UseCases.Vehicles.Queries.GetVehicleById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,14 @@ namespace EcoFleet.API.Controllers
         public VehiclesController(ISender sender)
         {
             _sender = sender;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllVehicles([FromQuery] GetAllVehicleQuery query)
+        {
+            var result = await _sender.Send(query);
+
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
