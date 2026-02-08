@@ -1,5 +1,6 @@
 ﻿using EcoFleet.Application.Behaviors;
 using FluentValidation;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EcoFleet.Application;
@@ -21,6 +22,9 @@ public static class AddApplicationServices
 
         // 2. Register Validators
         services.AddValidatorsFromAssembly(assembly);
+
+        // 3. Register Logging Pipeline
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
 
         return services;
     }

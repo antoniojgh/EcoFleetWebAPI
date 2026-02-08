@@ -16,24 +16,24 @@ Content-Type: application/json
 
 
 {
-    "LicensePlate" : "1234-BBC",
+    "LicensePlate" : "777-222",
     "Latitude" : 40.416,
     "Longitude" : -3.703,
-    "CurrentDriverId" : "d290f1ee-6c54-4b01-90e6-d701748f0851"
+    "CurrentDriverId" : null
 }
 
 ###
 
 # @timeout 120000
-PUT {{EcoFleet.API_HostAddress}}/10056BCF-2843-4EF7-9A5D-CF750E6FD06B
+PUT {{EcoFleet.API_HostAddress}}/1A309A1B-C058-4DA2-A7FC-FA64D2A92E51
 Content-Type: application/json
 
 
   {
-    "Id": "10056BCF-2843-4EF7-9A5D-CF750E6FD06B",
+    "Id": "1A309A1B-C058-4DA2-A7FC-FA64D2A92E51",
     "LicensePlate" : "2222-7777",
-    "Latitude" : 0,
-    "Longitude" : 0,
+    "Latitude" : 7,
+    "Longitude" : 7,
     "CurrentDriverId" : "10056BCF-2843-4EF7-9A5D-CF750E6FD06B"
 }
 
@@ -47,7 +47,7 @@ Content-Type: application/json
 
 
 # @timeout 120000
-DELETE {{EcoFleet.API_HostAddress}}/F7936BAB-6CCD-47F2-86A1-13374AF5C51F
+DELETE {{EcoFleet.API_HostAddress}}/1A309A1B-C058-4DA2-A7FC-FA64D2A92E51
 Content-Type: application/json
 
 ###

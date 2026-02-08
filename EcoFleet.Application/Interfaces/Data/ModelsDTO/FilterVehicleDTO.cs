@@ -2,15 +2,15 @@
 
 namespace EcoFleet.Application.Interfaces.Data.ModelsDTO
 {
-    public class FilterVehicleDTO
+    public record FilterVehicleDTO
     {
-        public int Page { get; set; } = 1;
-        public int RecordsByPage { get; set; } = 10;
-        public Guid? Id { get; set; }
-        public string? Plate { get; set; }
-        public VehicleStatus? Status { get; set; }
-        public double? Latitude { get; set; }
-        public double? Longitude { get; set; }
-        public Guid? CurrentDriverId { get; set; }
+        public int Page { get; init; } = 1;
+        public int RecordsByPage { get; init; } = 10;
+        public Guid? Id { get; init; }
+        public string? Plate { get; init; }
+        public VehicleStatus? Status { get; init; }
+        public double? Latitude { get; init; }
+        public double? Longitude { get; init; }
+        public Guid? CurrentDriverId { get; init; }
     }
 }

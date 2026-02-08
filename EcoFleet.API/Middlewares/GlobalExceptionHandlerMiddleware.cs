@@ -22,9 +22,24 @@ namespace EcoFleet.API.Middlewares
             {
                 await _next(context);
             }
+            catch (ValidationErrorException ex)
+            {
+                _logger.LogWarning("Validation error on {Path}: {@Errors}", context.Request.Path, ex.Errors);
+                await HandleExceptionAsync(context, ex);
+            }
+            catch (NotFoundException ex)
+            {
+                _logger.LogWarning("Resource not found on {Path}: {Message}", context.Request.Path, ex.Message);
+                await HandleExceptionAsync(context, ex);
+            }
+            catch (DomainException ex)
+            {
+                _logger.LogWarning("Domain rule violation on {Path}: {Message}", context.Request.Path, ex.Message);
+                await HandleExceptionAsync(context, ex);
+            }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error processing request {Path}", context.Request.Path);
+                _logger.LogError(ex, "Unhandled exception processing request {Path}", context.Request.Path);
                 await HandleExceptionAsync(context, ex);
             }
         }

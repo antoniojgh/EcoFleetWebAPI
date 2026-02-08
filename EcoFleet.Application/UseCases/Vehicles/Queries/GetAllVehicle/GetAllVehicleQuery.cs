@@ -5,8 +5,5 @@ using MediatR;
 
 namespace EcoFleet.Application.UseCases.Vehicles.Queries.GetAllVehicle
 {
-    public class GetAllVehicleQuery : FilterVehicleDTO, IRequest<PaginatedDTO<VehicleDetailDTO>>
-    {
-
-    }
+    public record GetAllVehicleQuery : FilterVehicleDTO, IRequest<PaginatedDTO<VehicleDetailDTO>>;
 }
