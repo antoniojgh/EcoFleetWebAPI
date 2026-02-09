@@ -25,12 +25,12 @@ public class LoggingBehaviorTests
         var request = new TestRequest("Test");
         var expectedResponse = new TestResponse("OK");
         var next = Substitute.For<RequestHandlerDelegate<TestResponse>>();
-        next().Returns(expectedResponse);
+        next(CancellationToken.None).Returns(expectedResponse);
 
         var result = await behavior.Handle(request, next, CancellationToken.None);
 
         result.Should().Be(expectedResponse);
-        await next.Received(1)();
+        await next.Received(1)(CancellationToken.None);
     }
 
     [Fact]
@@ -39,7 +39,7 @@ public class LoggingBehaviorTests
         var behavior = new LoggingBehavior<TestRequest, TestResponse>(_logger);
         var request = new TestRequest("Test");
         var next = Substitute.For<RequestHandlerDelegate<TestResponse>>();
-        next().Returns<TestResponse>(_ => throw new InvalidOperationException("Handler failed"));
+        next(CancellationToken.None).Returns<TestResponse>(_ => throw new InvalidOperationException("Handler failed"));
 
         var act = () => behavior.Handle(request, next, CancellationToken.None);
 
@@ -53,7 +53,7 @@ public class LoggingBehaviorTests
         var behavior = new LoggingBehavior<TestRequest, TestResponse>(_logger);
         var request = new TestRequest("Test");
         var next = Substitute.For<RequestHandlerDelegate<TestResponse>>();
-        next().Returns(new TestResponse("OK"));
+        next(CancellationToken.None).Returns(new TestResponse("OK"));
 
         await behavior.Handle(request, next, CancellationToken.None);
 

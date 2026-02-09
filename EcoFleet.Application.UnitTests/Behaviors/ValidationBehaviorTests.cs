@@ -29,12 +29,12 @@ public class ValidationBehaviorTests
         var request = new TestRequest("Test");
         var expectedResponse = new TestResponse("OK");
         var next = Substitute.For<RequestHandlerDelegate<TestResponse>>();
-        next().Returns(expectedResponse);
+        next(CancellationToken.None).Returns(expectedResponse);
 
         var result = await behavior.Handle(request, next, CancellationToken.None);
 
         result.Should().Be(expectedResponse);
-        await next.Received(1)();
+        await next.Received(1)(CancellationToken.None);
     }
 
     [Fact]
@@ -48,12 +48,12 @@ public class ValidationBehaviorTests
         var request = new TestRequest("Valid");
         var expectedResponse = new TestResponse("OK");
         var next = Substitute.For<RequestHandlerDelegate<TestResponse>>();
-        next().Returns(expectedResponse);
+        next(CancellationToken.None).Returns(expectedResponse);
 
         var result = await behavior.Handle(request, next, CancellationToken.None);
 
         result.Should().Be(expectedResponse);
-        await next.Received(1)();
+        await next.Received(1)(CancellationToken.None);
     }
 
     [Fact]
@@ -93,7 +93,7 @@ public class ValidationBehaviorTests
 
         try { await behavior.Handle(request, next, CancellationToken.None); } catch { }
 
-        await next.DidNotReceive()();
+        await next.DidNotReceive()(CancellationToken.None);
     }
 
     [Fact]
