@@ -97,4 +97,18 @@ public class VehicleAssignDriverTests
         vehicle.DomainEvents.Should().HaveCount(2);
         vehicle.DomainEvents.Should().AllBeOfType<VehicleDriverAssignedEvent>();
     }
+
+    [Fact]
+    public void AssignDriver_ShouldRaiseEvent_WithCorrectValues()
+    {
+        var vehicle = CreateIdleVehicle();
+        var driverId = new DriverId(Guid.NewGuid());
+
+        vehicle.AssignDriver(driverId);
+
+        var domainEvent = vehicle.DomainEvents.OfType<VehicleDriverAssignedEvent>().Single();
+        domainEvent.VehicleId.Should().Be(vehicle.Id);
+        domainEvent.DriverId.Should().Be(driverId);
+        domainEvent.OcurredOn.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
+    }
 }

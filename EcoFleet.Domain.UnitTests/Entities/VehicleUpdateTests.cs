@@ -21,6 +21,18 @@ public class VehicleUpdateTests
     }
 
     [Fact]
+    public void UpdateTelemetry_ShouldPersistNewCoordinateValues()
+    {
+        var vehicle = CreateVehicle();
+        var newLocation = Geolocation.Create(52.520, 13.405);
+
+        vehicle.UpdateTelemetry(newLocation);
+
+        vehicle.CurrentLocation.Latitude.Should().Be(52.520);
+        vehicle.CurrentLocation.Longitude.Should().Be(13.405);
+    }
+
+    [Fact]
     public void UpdatePlate_ShouldUpdatePlate()
     {
         var vehicle = CreateVehicle();
@@ -29,5 +41,15 @@ public class VehicleUpdateTests
         vehicle.UpdatePlate(newPlate);
 
         vehicle.Plate.Should().Be(newPlate);
+    }
+
+    [Fact]
+    public void UpdatePlate_ShouldPersistNewPlateValue()
+    {
+        var vehicle = CreateVehicle();
+
+        vehicle.UpdatePlate(LicensePlate.Create("new-999"));
+
+        vehicle.Plate.Value.Should().Be("NEW-999");
     }
 }

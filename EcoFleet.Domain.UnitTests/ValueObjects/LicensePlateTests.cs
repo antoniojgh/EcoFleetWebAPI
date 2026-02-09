@@ -61,4 +61,13 @@ public class LicensePlateTests
 
         plate1.GetHashCode().Should().Be(plate2.GetHashCode());
     }
+
+    [Fact]
+    public void GetHashCode_WithDifferentValue_ShouldDiffer()
+    {
+        var plate1 = LicensePlate.Create("ABC-123");
+        var plate2 = LicensePlate.Create("XYZ-789");
+
+        plate1.GetHashCode().Should().NotBe(plate2.GetHashCode());
+    }
 }

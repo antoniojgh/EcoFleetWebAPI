@@ -83,4 +83,13 @@ public class GeolocationTests
 
         geo1.GetHashCode().Should().Be(geo2.GetHashCode());
     }
+
+    [Fact]
+    public void GetHashCode_WithDifferentCoordinates_ShouldDiffer()
+    {
+        var geo1 = Geolocation.Create(40.416, -3.703);
+        var geo2 = Geolocation.Create(41.0, -3.703);
+
+        geo1.GetHashCode().Should().NotBe(geo2.GetHashCode());
+    }
 }

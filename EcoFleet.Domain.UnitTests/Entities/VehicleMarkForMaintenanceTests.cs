@@ -76,4 +76,16 @@ public class VehicleMarkForMaintenanceTests
         vehicle.Status.Should().Be(VehicleStatus.Active);
         vehicle.CurrentDriverId.Should().NotBeNull();
     }
+
+    [Fact]
+    public void MarkForMaintenance_WhenAlreadyInMaintenance_ShouldRaiseAnotherEvent()
+    {
+        var vehicle = CreateIdleVehicle();
+
+        vehicle.MarkForMaintenance();
+        vehicle.MarkForMaintenance();
+
+        vehicle.Status.Should().Be(VehicleStatus.Maintenance);
+        vehicle.DomainEvents.OfType<VehicleMaintenanceStartedEvent>().Should().HaveCount(2);
+    }
 }
