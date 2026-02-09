@@ -9,5 +9,8 @@
   <Folder Name="/Infrastructure/">
     <Project Path="EcoFleet.Infrastructure/EcoFleet.Infrastructure.csproj" />
   </Folder>
-  <Folder Name="/Tests/" />
+  <Folder Name="/Tests/">
+    <Project Path="EcoFleet.Application.UnitTests/EcoFleet.Application.UnitTests.csproj" Id="430678c4-3fbf-4137-953e-83ca43f97964" />
+    <Project Path="EcoFleet.Domain.UnitTests/EcoFleet.Domain.UnitTests.csproj" Id="7fe65724-bdb9-4e43-816f-1cde16a01f5a" />
+  </Folder>
 </Solution>
