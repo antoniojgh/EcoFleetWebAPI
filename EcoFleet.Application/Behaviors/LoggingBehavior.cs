@@ -34,6 +34,7 @@ public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
         var response = await next();
         stopwatch.Stop();
 
+        // Log a warning if the request took longer than 500ms to process
         if (stopwatch.ElapsedMilliseconds > 500)
         {
             _logger.LogWarning("Long running request: {RequestName} took {ElapsedMs}ms", requestName, stopwatch.ElapsedMilliseconds);
