@@ -13,6 +13,13 @@ public class CreateVehicleHandlerTests
     private readonly IUnitOfWork _unitOfWork;
     private readonly CreateVehicleHandler _handler;
 
+    // Example helper to keep tests clean
+    private CreateVehicleCommand CreateCommandOne(Guid? driverId = null)
+        => new("ABC-123", 40.416, -3.703, driverId);
+
+    private CreateVehicleCommand CreateCommandTwo(Guid? driverId = null)
+    => new("XYZ-789", 10.0, 20.0, driverId);
+
     public CreateVehicleHandlerTests()
     {
         _repository = Substitute.For<IRepositoryVehicle>();
@@ -23,7 +30,7 @@ public class CreateVehicleHandlerTests
     [Fact]
     public async Task Handle_WithoutDriver_ShouldReturnNonEmptyGuid()
     {
-        var command = new CreateVehicleCommand("ABC-123", 40.416, -3.703, null);
+        var command = CreateCommandOne();
 
         var result = await _handler.Handle(command, CancellationToken.None);
 
@@ -33,7 +40,7 @@ public class CreateVehicleHandlerTests
     [Fact]
     public async Task Handle_WithoutDriver_ShouldCallAddAsync()
     {
-        var command = new CreateVehicleCommand("ABC-123", 40.416, -3.703, null);
+        var command = CreateCommandOne();
 
         await _handler.Handle(command, CancellationToken.None);
 
@@ -42,13 +49,13 @@ public class CreateVehicleHandlerTests
             v.CurrentLocation.Latitude == 40.416 &&
             v.CurrentLocation.Longitude == -3.703 &&
             v.Status == VehicleStatus.Idle &&
-            v.CurrentDriverId == null));
+            v.CurrentDriverId == null), CancellationToken.None);
     }
 
     [Fact]
     public async Task Handle_WithoutDriver_ShouldCallSaveChanges()
     {
-        var command = new CreateVehicleCommand("ABC-123", 40.416, -3.703, null);
+        var command = CreateCommandOne();
 
         await _handler.Handle(command, CancellationToken.None);
 
@@ -59,21 +66,21 @@ public class CreateVehicleHandlerTests
     public async Task Handle_WithDriver_ShouldCreateActiveVehicle()
     {
         var driverId = Guid.NewGuid();
-        var command = new CreateVehicleCommand("XYZ-789", 10.0, 20.0, driverId);
+        var command = CreateCommandTwo(driverId);
 
         await _handler.Handle(command, CancellationToken.None);
 
         await _repository.Received(1).AddAsync(Arg.Is<Vehicle>(v =>
             v.Status == VehicleStatus.Active &&
             v.CurrentDriverId != null &&
-            v.CurrentDriverId.Value == driverId));
+            v.CurrentDriverId.Value == driverId), CancellationToken.None);
     }
 
     [Fact]
     public async Task Handle_WithDriver_ShouldReturnNonEmptyGuid()
     {
         var driverId = Guid.NewGuid();
-        var command = new CreateVehicleCommand("XYZ-789", 10.0, 20.0, driverId);
+        var command = CreateCommandTwo(driverId);
 
         var result = await _handler.Handle(command, CancellationToken.None);
 
@@ -83,7 +90,7 @@ public class CreateVehicleHandlerTests
     [Fact]
     public async Task Handle_ShouldCallAddBeforeSaveChanges()
     {
-        var command = new CreateVehicleCommand("ABC-123", 40.416, -3.703, null);
+        var command = CreateCommandOne();
 
         await _handler.Handle(command, CancellationToken.None);
 
@@ -97,7 +104,7 @@ public class CreateVehicleHandlerTests
     [Fact]
     public async Task Handle_TwoInvocations_ShouldReturnDifferentIds()
     {
-        var command = new CreateVehicleCommand("ABC-123", 40.416, -3.703, null);
+        var command = CreateCommandOne();
 
         var result1 = await _handler.Handle(command, CancellationToken.None);
         var result2 = await _handler.Handle(command, CancellationToken.None);
@@ -113,6 +120,6 @@ public class CreateVehicleHandlerTests
         await _handler.Handle(command, CancellationToken.None);
 
         await _repository.Received(1).AddAsync(Arg.Is<Vehicle>(v =>
-            v.Plate.Value == "ABC-XYZ"));
+            v.Plate.Value == "ABC-XYZ"), CancellationToken.None);
     }
 }
