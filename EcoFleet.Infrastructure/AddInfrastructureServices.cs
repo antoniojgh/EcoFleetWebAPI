@@ -1,4 +1,5 @@
 ﻿using EcoFleet.Application.Interfaces.Data;
+using EcoFleet.Infrastructure.Outbox;
 using EcoFleet.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -21,6 +22,9 @@ namespace EcoFleet.Infrastructure
 
             // 3. Register Unit of Work
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            // 4. Register Outbox Processor (Background Worker)
+            services.AddHostedService<OutboxProcessor>();
 
             return services;
         }

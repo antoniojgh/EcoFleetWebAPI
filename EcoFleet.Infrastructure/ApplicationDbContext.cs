@@ -1,4 +1,5 @@
 ﻿using EcoFleet.Domain.Entities;
+using EcoFleet.Infrastructure.Outbox;
 using Microsoft.EntityFrameworkCore;
 
 namespace EcoFleet.Infrastructure
@@ -10,6 +11,7 @@ namespace EcoFleet.Infrastructure
         }
 
         public DbSet<Vehicle> Vehicles { get; set; }
+        public DbSet<OutboxMessage> OutboxMessages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -16,10 +16,10 @@ Content-Type: application/json
 
 
 {
-    "LicensePlate" : "777-222",
+    "LicensePlate" : "333-222",
     "Latitude" : 40.416,
     "Longitude" : -3.703,
-    "CurrentDriverId" : null
+    "CurrentDriverId" : "D290F1EE-6C54-4B01-90E6-D701748F0851"
 }
 
 ###
