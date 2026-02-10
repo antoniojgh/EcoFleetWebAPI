@@ -13,6 +13,7 @@ public class OutboxProcessor : BackgroundService
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly ILogger<OutboxProcessor> _logger;
     private static readonly TimeSpan PollingInterval = TimeSpan.FromSeconds(10);
+    private const int BatchSize = 20;
 
     public OutboxProcessor(IServiceScopeFactory scopeFactory, ILogger<OutboxProcessor> logger)
     {
@@ -40,19 +41,32 @@ public class OutboxProcessor : BackgroundService
     }
 
     private async Task ProcessOutboxMessagesAsync(CancellationToken stoppingToken)
-   {
+    {
         using var scope = _scopeFactory.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         var publisher = scope.ServiceProvider.GetRequiredService<IPublisher>();
 
+        // Use an explicit transaction so UPDLOCK is held until commit
+        await using var transaction = await dbContext.Database.BeginTransactionAsync(stoppingToken);
+
+        // UPDLOCK: locks selected rows so other replicas cannot pick them up
+        // READPAST: other replicas skip locked rows instead of waiting (no blocking)
         var messages = await dbContext.OutboxMessages
-            .Where(m => m.ProcessedOn == null)
-            .OrderBy(m => m.OccurredOn)
-            .Take(20)
+            .FromSqlRaw(
+                """
+                SELECT TOP ({0}) *
+                FROM OutboxMessages WITH (UPDLOCK, READPAST)
+                WHERE ProcessedOn IS NULL
+                ORDER BY OccurredOn
+                """,
+                BatchSize)
             .ToListAsync(stoppingToken);
 
         if (messages.Count == 0)
+        {
+            await transaction.CommitAsync(stoppingToken);
             return;
+        }
 
         _logger.LogInformation("Processing {Count} outbox message(s).", messages.Count);
 
@@ -96,5 +110,6 @@ public class OutboxProcessor : BackgroundService
         }
 
         await dbContext.SaveChangesAsync(stoppingToken);
+        await transaction.CommitAsync(stoppingToken);
     }
 }
