@@ -1,0 +1,117 @@
+@EcoFleet.API_HostAddress = https://localhost:7205/api/v1/vehicles
+
+### ============================================================
+### GET ALL VEHICLES (with filters and pagination)
+### ============================================================
+
+# @timeout 120000
+GET {{EcoFleet.API_HostAddress}}?Page=1&RecordsByPage=10
+
+###
+
+# @timeout 120000
+GET {{EcoFleet.API_HostAddress}}?Page=1&RecordsByPage=5&Plate=2222-7777&Status=Idle
+
+###
+
+# @timeout 120000
+GET {{EcoFleet.API_HostAddress}}?Page=1&RecordsByPage=10&Latitude=40.416&Longitude=-3.703&CurrentDriverId=D290F1EE-6C54-4B01-90E6-D701748F0851
+
+###
+
+### ============================================================
+### GET VEHICLE BY ID
+### ============================================================
+
+# @timeout 120000
+GET {{EcoFleet.API_HostAddress}}/10056BCF-2843-4EF7-9A5D-CF750E6FD06A
+
+###
+
+### ============================================================
+### CREATE VEHICLE (without driver — Idle)
+### ============================================================
+
+# @timeout 120000
+POST {{EcoFleet.API_HostAddress}}
+Content-Type: application/json
+
+{
+    "LicensePlate": "ABC-123",
+    "Latitude": 40.416,
+    "Longitude": -3.703,
+    "CurrentDriverId": null
+}
+
+###
+
+### ============================================================
+### CREATE VEHICLE (with driver — Active)
+### ============================================================
+
+# @timeout 120000
+POST {{EcoFleet.API_HostAddress}}
+Content-Type: application/json
+
+{
+    "LicensePlate": "333-222",
+    "Latitude": 40.416,
+    "Longitude": -3.703,
+    "CurrentDriverId": "D290F1EE-6C54-4B01-90E6-D701748F0851"
+}
+
+###
+
+### ============================================================
+### UPDATE VEHICLE (change plate, location and assign driver)
+### ============================================================
+
+# @timeout 120000
+PUT {{EcoFleet.API_HostAddress}}/1A309A1B-C058-4DA2-A7FC-FA64D2A92E51
+Content-Type: application/json
+
+{
+    "Id": "1A309A1B-C058-4DA2-A7FC-FA64D2A92E51",
+    "LicensePlate": "2222-7777",
+    "Latitude": 7,
+    "Longitude": 7,
+    "CurrentDriverId": "10056BCF-2843-4EF7-9A5D-CF750E6FD06B"
+}
+
+###
+
+### ============================================================
+### UPDATE VEHICLE (unassign driver — set to null)
+### ============================================================
+
+# @timeout 120000
+PUT {{EcoFleet.API_HostAddress}}/1A309A1B-C058-4DA2-A7FC-FA64D2A92E51
+Content-Type: application/json
+
+{
+    "Id": "1A309A1B-C058-4DA2-A7FC-FA64D2A92E51",
+    "LicensePlate": "2222-7777",
+    "Latitude": 7,
+    "Longitude": 7,
+    "CurrentDriverId": null
+}
+
+###
+
+### ============================================================
+### MARK VEHICLE FOR MAINTENANCE
+### ============================================================
+
+# @timeout 120000
+PATCH {{EcoFleet.API_HostAddress}}/maintenance/F7936BAB-6CCD-47F2-86A1-13374AF5C51F
+
+###
+
+### ============================================================
+### DELETE VEHICLE
+### ============================================================
+
+# @timeout 120000
+DELETE {{EcoFleet.API_HostAddress}}/1A309A1B-C058-4DA2-A7FC-FA64D2A92E51
+
+###

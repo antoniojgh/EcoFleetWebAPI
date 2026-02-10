@@ -1,0 +1,131 @@
+@EcoFleet.API_HostAddress = https://localhost:7205/api/v1/drivers
+
+### ============================================================
+### GET ALL DRIVERS (with filters and pagination)
+### ============================================================
+
+# @timeout 120000
+GET {{EcoFleet.API_HostAddress}}?Page=1&RecordsByPage=10
+
+###
+
+# @timeout 120000
+GET {{EcoFleet.API_HostAddress}}?Page=1&RecordsByPage=5&FirstName=John&LastName=Doe&Status=Available
+
+###
+
+# @timeout 120000
+GET {{EcoFleet.API_HostAddress}}?Page=1&RecordsByPage=10&License=DL-123456&CurrentVehicleId=1A309A1B-C058-4DA2-A7FC-FA64D2A92E51
+
+###
+
+### ============================================================
+### GET DRIVER BY ID
+### ============================================================
+
+# @timeout 120000
+GET {{EcoFleet.API_HostAddress}}/D290F1EE-6C54-4B01-90E6-D701748F0851
+
+###
+
+### ============================================================
+### CREATE DRIVER (without vehicle — Available)
+### ============================================================
+
+# @timeout 120000
+POST {{EcoFleet.API_HostAddress}}
+Content-Type: application/json
+
+{
+    "FirstName": "John",
+    "LastName": "Doe",
+    "License": "DL-123456",
+    "CurrentVehicleId": null
+}
+
+###
+
+### ============================================================
+### CREATE DRIVER (with vehicle — OnDuty)
+### ============================================================
+
+# @timeout 120000
+POST {{EcoFleet.API_HostAddress}}
+Content-Type: application/json
+
+{
+    "FirstName": "Jane",
+    "LastName": "Smith",
+    "License": "DL-789012",
+    "CurrentVehicleId": "F0007597-EA71-43EB-AF0C-BD88CE2D559F"
+}
+
+###
+
+### ============================================================
+### UPDATE DRIVER (change name, license and assign vehicle)
+### ============================================================
+
+# @timeout 120000
+PUT {{EcoFleet.API_HostAddress}}/D290F1EE-6C54-4B01-90E6-D701748F0851
+Content-Type: application/json
+
+{
+    "Id": "D290F1EE-6C54-4B01-90E6-D701748F0851",
+    "FirstName": "John",
+    "LastName": "Doe Updated",
+    "License": "DL-999999",
+    "CurrentVehicleId": "F7936BAB-6CCD-47F2-86A1-13374AF5C51F"
+}
+
+###
+
+### ============================================================
+### UPDATE DRIVER (unassign vehicle — set to null)
+### ============================================================
+
+# @timeout 120000
+PUT {{EcoFleet.API_HostAddress}}/D290F1EE-6C54-4B01-90E6-D701748F0851
+Content-Type: application/json
+
+{
+    "Id": "D290F1EE-6C54-4B01-90E6-D701748F0851",
+    "FirstName": "John",
+    "LastName": "Doe Updated",
+    "License": "DL-999999",
+    "CurrentVehicleId": null
+}
+
+###
+
+### ============================================================
+### SUSPEND DRIVER
+### ============================================================
+
+# @timeout 120000
+PATCH {{EcoFleet.API_HostAddress}}/suspend/D290F1EE-6C54-4B01-90E6-D701748F0851
+
+###
+
+### ============================================================
+### REINSTATE DRIVER
+### ============================================================
+
+# @timeout 120000
+PATCH {{EcoFleet.API_HostAddress}}/reinstate/D290F1EE-6C54-4B01-90E6-D701748F0851
+
+###
+
+### ============================================================
+### DELETE DRIVER
+### ============================================================
+
+# @timeout 120000
+DELETE {{EcoFleet.API_HostAddress}}/D290F1EE-6C54-4B01-90E6-D701748F0851
+
+###
+Content-Type: application/json
+
+###
+
+# Response

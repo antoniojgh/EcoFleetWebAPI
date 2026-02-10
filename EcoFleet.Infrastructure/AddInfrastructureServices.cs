@@ -19,6 +19,7 @@ namespace EcoFleet.Infrastructure
 
             // 2. Register Repositories
             services.AddScoped<IRepositoryVehicle, RepositoryVehicle>();
+            services.AddScoped<IRepositoryDriver, RepositoryDriver>();
 
             // 3. Register Unit of Work
             services.AddScoped<IUnitOfWork, UnitOfWork>();
