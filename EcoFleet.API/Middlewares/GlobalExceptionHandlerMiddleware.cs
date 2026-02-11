@@ -32,6 +32,11 @@ namespace EcoFleet.API.Middlewares
                 _logger.LogWarning("Resource not found on {Path}: {Message}", context.Request.Path, ex.Message);
                 await HandleExceptionAsync(context, ex);
             }
+            catch (BusinessRuleException ex)
+            {
+                _logger.LogWarning("Business rule violation on {Path}: {Message}", context.Request.Path, ex.Message);
+                await HandleExceptionAsync(context, ex);
+            }
             catch (DomainException ex)
             {
                 _logger.LogWarning("Domain rule violation on {Path}: {Message}", context.Request.Path, ex.Message);
@@ -73,9 +78,19 @@ namespace EcoFleet.API.Middlewares
                     };
                     break;
 
+                case BusinessRuleException businessEx:
+                    // 409 Conflict - The request conflicts with the current state of a resource
+                    statusCode = HttpStatusCode.Conflict;
+                    response = new
+                    {
+                        Type = "BusinessRuleViolation",
+                        Message = businessEx.Message
+                    };
+                    break;
+
                 case DomainException domainEx:
-                    // 400 - Return the business rule violation message
-                    statusCode = HttpStatusCode.BadRequest;
+                    // 422 Unprocessable Entity - Domain invariant violation
+                    statusCode = HttpStatusCode.UnprocessableEntity;
                     response = new
                     {
                         Type = "DomainError",

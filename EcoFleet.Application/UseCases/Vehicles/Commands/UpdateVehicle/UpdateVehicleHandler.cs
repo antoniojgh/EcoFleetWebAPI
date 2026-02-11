@@ -1,6 +1,7 @@
 using EcoFleet.Application.Exceptions;
 using EcoFleet.Application.Interfaces.Data;
 using EcoFleet.Domain.Entities;
+using EcoFleet.Domain.Enums;
 using EcoFleet.Domain.ValueObjects;
 using MediatR;
 
@@ -8,24 +9,24 @@ namespace EcoFleet.Application.UseCases.Vehicles.Commands.UpdateVehicle
 {
     public class UpdateVehicleHandler : IRequestHandler<UpdateVehicleCommand>
     {
-        private readonly IRepositoryVehicle _repository;
+        private readonly IRepositoryVehicle _vehicleRepository;
+        private readonly IRepositoryDriver _driverRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public UpdateVehicleHandler(IRepositoryVehicle repository, IUnitOfWork unitOfWork)
+        public UpdateVehicleHandler(IRepositoryVehicle vehicleRepository, IRepositoryDriver driverRepository, IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _vehicleRepository = vehicleRepository;
+            _driverRepository = driverRepository;
             _unitOfWork = unitOfWork;
         }
 
         public async Task Handle(UpdateVehicleCommand request, CancellationToken cancellationToken)
         {
             var vehicleId = new VehicleId(request.Id);
-            var vehicle = await _repository.GetByIdAsync(vehicleId, cancellationToken);
+            var vehicle = await _vehicleRepository.GetByIdAsync(vehicleId, cancellationToken);
 
             if (vehicle is null)
-            {
                 throw new NotFoundException(nameof(Vehicle), request.Id);
-            }
 
             var plate = LicensePlate.Create(request.LicensePlate);
             var location = Geolocation.Create(request.Latitude, request.Longitude);
@@ -35,21 +36,54 @@ namespace EcoFleet.Application.UseCases.Vehicles.Commands.UpdateVehicle
 
             if (request.CurrentDriverId.HasValue)
             {
-                var driverId = new DriverId(request.CurrentDriverId.Value);
-                if (vehicle.CurrentDriverId != driverId)
+                var newDriverId = new DriverId(request.CurrentDriverId.Value);
+
+                // Only proceed if the driver is changing to avoid unnecessary operations
+                if (vehicle.CurrentDriverId != newDriverId)
                 {
-                    vehicle.AssignDriver(driverId);
+                    // 1. Validate the new driver exists and is available (before any mutation)
+                    var newDriver = await _driverRepository.GetByIdAsync(newDriverId, cancellationToken);
+
+                    if (newDriver is null)
+                        throw new NotFoundException(nameof(Driver), request.CurrentDriverId.Value);
+
+                    if (newDriver.Status != DriverStatus.Available)
+                        throw new BusinessRuleException($"Driver {request.CurrentDriverId.Value} is not available for assignment.");
+
+                    // 2. Release the previous driver (if any)
+                    if (vehicle.CurrentDriverId is not null)
+                    {
+                        var previousDriver = await _driverRepository.GetByIdAsync(vehicle.CurrentDriverId, cancellationToken);
+                        if (previousDriver is not null)
+                        {
+                            previousDriver.UnassignVehicle();
+                            await _driverRepository.Update(previousDriver, cancellationToken);
+                        }
+                    }
+
+                    // 3. Sync both aggregates
+                    vehicle.AssignDriver(newDriverId);
+                    newDriver.AssignVehicle(vehicle.Id);
+                    await _driverRepository.Update(newDriver, cancellationToken);
                 }
             }
             else
             {
                 if (vehicle.CurrentDriverId is not null)
                 {
+                    // Release the current driver
+                    var currentDriver = await _driverRepository.GetByIdAsync(vehicle.CurrentDriverId, cancellationToken);
+                    if (currentDriver is not null)
+                    {
+                        currentDriver.UnassignVehicle();
+                        await _driverRepository.Update(currentDriver, cancellationToken);
+                    }
+
                     vehicle.UnassignDriver();
                 }
             }
 
-            await _repository.Update(vehicle, cancellationToken);
+            await _vehicleRepository.Update(vehicle, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }

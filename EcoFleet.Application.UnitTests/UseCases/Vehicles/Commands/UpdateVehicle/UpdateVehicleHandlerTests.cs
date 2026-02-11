@@ -11,15 +11,17 @@ namespace EcoFleet.Application.UnitTests.UseCases.Vehicles.Commands.UpdateVehicl
 
 public class UpdateVehicleHandlerTests
 {
-    private readonly IRepositoryVehicle _repository;
+    private readonly IRepositoryVehicle _vehicleRepository;
+    private readonly IRepositoryDriver _driverRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly UpdateVehicleHandler _handler;
 
     public UpdateVehicleHandlerTests()
     {
-        _repository = Substitute.For<IRepositoryVehicle>();
+        _vehicleRepository = Substitute.For<IRepositoryVehicle>();
+        _driverRepository = Substitute.For<IRepositoryDriver>();
         _unitOfWork = Substitute.For<IUnitOfWork>();
-        _handler = new UpdateVehicleHandler(_repository, _unitOfWork);
+        _handler = new UpdateVehicleHandler(_vehicleRepository, _driverRepository, _unitOfWork);
     }
 
     private Vehicle CreateIdleVehicle()
@@ -28,16 +30,28 @@ public class UpdateVehicleHandlerTests
     private Vehicle CreateActiveVehicle(Guid driverId)
         => new(LicensePlate.Create("OLD-111"), Geolocation.Create(0, 0), new DriverId(driverId));
 
-    private void SetupRepositoryReturns(Vehicle vehicle)
+    private Driver CreateAvailableDriver()
+        => new(FullName.Create("John", "Doe"), DriverLicense.Create("DL-123"));
+
+    private Driver CreateOnDutyDriver(VehicleId vehicleId)
+        => new(FullName.Create("John", "Doe"), DriverLicense.Create("DL-123"), vehicleId);
+
+    private void SetupVehicleReturns(Vehicle vehicle)
     {
-        _repository.GetByIdAsync(Arg.Any<VehicleId>(), Arg.Any<CancellationToken>())
+        _vehicleRepository.GetByIdAsync(Arg.Any<VehicleId>(), Arg.Any<CancellationToken>())
             .Returns(vehicle);
+    }
+
+    private void SetupDriverReturns(DriverId driverId, Driver driver)
+    {
+        _driverRepository.GetByIdAsync(Arg.Is<DriverId>(id => id == driverId), Arg.Any<CancellationToken>())
+            .Returns(driver);
     }
 
     [Fact]
     public async Task Handle_WhenVehicleNotFound_ShouldThrowNotFoundException()
     {
-        _repository.GetByIdAsync(Arg.Any<VehicleId>(), Arg.Any<CancellationToken>())
+        _vehicleRepository.GetByIdAsync(Arg.Any<VehicleId>(), Arg.Any<CancellationToken>())
             .Returns((Vehicle?)null);
 
         var command = new UpdateVehicleCommand(Guid.NewGuid(), "ABC-123", 10, 20, null);
@@ -50,14 +64,14 @@ public class UpdateVehicleHandlerTests
     [Fact]
     public async Task Handle_WhenVehicleNotFound_ShouldNotCallUpdate()
     {
-        _repository.GetByIdAsync(Arg.Any<VehicleId>(), Arg.Any<CancellationToken>())
+        _vehicleRepository.GetByIdAsync(Arg.Any<VehicleId>(), Arg.Any<CancellationToken>())
             .Returns((Vehicle?)null);
 
         var command = new UpdateVehicleCommand(Guid.NewGuid(), "ABC-123", 10, 20, null);
 
         try { await _handler.Handle(command, CancellationToken.None); } catch { }
 
-        await _repository.DidNotReceive().Update(Arg.Any<Vehicle>(), Arg.Any<CancellationToken>());
+        await _vehicleRepository.DidNotReceive().Update(Arg.Any<Vehicle>(), Arg.Any<CancellationToken>());
         await _unitOfWork.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 
@@ -65,7 +79,7 @@ public class UpdateVehicleHandlerTests
     public async Task Handle_WhenVehicleExists_ShouldUpdatePlateAndLocation()
     {
         var vehicle = CreateIdleVehicle();
-        SetupRepositoryReturns(vehicle);
+        SetupVehicleReturns(vehicle);
 
         var command = new UpdateVehicleCommand(Guid.NewGuid(), "NEW-999", 52.520, 13.405, null);
 
@@ -80,7 +94,7 @@ public class UpdateVehicleHandlerTests
     public async Task Handle_WhenVehicleExists_ShouldCallUpdateAndSaveChanges()
     {
         var vehicle = CreateIdleVehicle();
-        SetupRepositoryReturns(vehicle);
+        SetupVehicleReturns(vehicle);
 
         var command = new UpdateVehicleCommand(Guid.NewGuid(), "NEW-999", 10, 20, null);
 
@@ -88,17 +102,19 @@ public class UpdateVehicleHandlerTests
 
         Received.InOrder(() =>
         {
-            _repository.Update(vehicle, Arg.Any<CancellationToken>());
+            _vehicleRepository.Update(vehicle, Arg.Any<CancellationToken>());
             _unitOfWork.SaveChangesAsync(Arg.Any<CancellationToken>());
         });
     }
 
     [Fact]
-    public async Task Handle_WithNewDriver_ShouldAssignDriver()
+    public async Task Handle_WithAvailableDriver_ShouldAssignDriverAndSyncBoth()
     {
         var vehicle = CreateIdleVehicle();
-        SetupRepositoryReturns(vehicle);
+        SetupVehicleReturns(vehicle);
         var driverId = Guid.NewGuid();
+        var driver = CreateAvailableDriver();
+        SetupDriverReturns(new DriverId(driverId), driver);
 
         var command = new UpdateVehicleCommand(Guid.NewGuid(), "OLD-111", 0, 0, driverId);
 
@@ -107,21 +123,41 @@ public class UpdateVehicleHandlerTests
         vehicle.CurrentDriverId.Should().NotBeNull();
         vehicle.CurrentDriverId!.Value.Should().Be(driverId);
         vehicle.Status.Should().Be(VehicleStatus.Active);
+        driver.Status.Should().Be(DriverStatus.OnDuty);
+        driver.CurrentVehicleId.Should().Be(vehicle.Id);
     }
 
     [Fact]
-    public async Task Handle_WithDifferentDriver_ShouldReassignDriver()
+    public async Task Handle_WithNonExistentDriver_ShouldThrowNotFoundException()
     {
-        var existingDriverId = Guid.NewGuid();
-        var vehicle = CreateActiveVehicle(existingDriverId);
-        SetupRepositoryReturns(vehicle);
-        var newDriverId = Guid.NewGuid();
+        var vehicle = CreateIdleVehicle();
+        SetupVehicleReturns(vehicle);
+        _driverRepository.GetByIdAsync(Arg.Any<DriverId>(), Arg.Any<CancellationToken>())
+            .Returns((Driver?)null);
 
-        var command = new UpdateVehicleCommand(Guid.NewGuid(), "OLD-111", 0, 0, newDriverId);
+        var command = new UpdateVehicleCommand(Guid.NewGuid(), "OLD-111", 0, 0, Guid.NewGuid());
 
-        await _handler.Handle(command, CancellationToken.None);
+        var act = () => _handler.Handle(command, CancellationToken.None);
 
-        vehicle.CurrentDriverId!.Value.Should().Be(newDriverId);
+        await act.Should().ThrowAsync<NotFoundException>();
+    }
+
+    [Fact]
+    public async Task Handle_WithSuspendedDriver_ShouldThrowBusinessRuleException()
+    {
+        var vehicle = CreateIdleVehicle();
+        SetupVehicleReturns(vehicle);
+        var driverId = Guid.NewGuid();
+        var driver = CreateAvailableDriver();
+        driver.Suspend();
+        SetupDriverReturns(new DriverId(driverId), driver);
+
+        var command = new UpdateVehicleCommand(Guid.NewGuid(), "OLD-111", 0, 0, driverId);
+
+        var act = () => _handler.Handle(command, CancellationToken.None);
+
+        await act.Should().ThrowAsync<BusinessRuleException>()
+            .WithMessage($"*{driverId}*not available*");
     }
 
     [Fact]
@@ -130,7 +166,7 @@ public class UpdateVehicleHandlerTests
         var driverId = Guid.NewGuid();
         var vehicle = CreateActiveVehicle(driverId);
         vehicle.ClearDomainEvents();
-        SetupRepositoryReturns(vehicle);
+        SetupVehicleReturns(vehicle);
 
         var command = new UpdateVehicleCommand(Guid.NewGuid(), "OLD-111", 0, 0, driverId);
 
@@ -141,11 +177,13 @@ public class UpdateVehicleHandlerTests
     }
 
     [Fact]
-    public async Task Handle_WithNullDriver_WhenActiveVehicle_ShouldUnassign()
+    public async Task Handle_WithNullDriver_WhenActiveVehicle_ShouldUnassignBoth()
     {
         var driverId = Guid.NewGuid();
         var vehicle = CreateActiveVehicle(driverId);
-        SetupRepositoryReturns(vehicle);
+        SetupVehicleReturns(vehicle);
+        var driver = CreateOnDutyDriver(vehicle.Id);
+        SetupDriverReturns(new DriverId(driverId), driver);
 
         var command = new UpdateVehicleCommand(Guid.NewGuid(), "OLD-111", 0, 0, null);
 
@@ -153,6 +191,8 @@ public class UpdateVehicleHandlerTests
 
         vehicle.CurrentDriverId.Should().BeNull();
         vehicle.Status.Should().Be(VehicleStatus.Idle);
+        driver.Status.Should().Be(DriverStatus.Available);
+        driver.CurrentVehicleId.Should().BeNull();
     }
 
     [Fact]
@@ -160,7 +200,7 @@ public class UpdateVehicleHandlerTests
     {
         var vehicle = CreateIdleVehicle();
         vehicle.ClearDomainEvents();
-        SetupRepositoryReturns(vehicle);
+        SetupVehicleReturns(vehicle);
 
         var command = new UpdateVehicleCommand(Guid.NewGuid(), "OLD-111", 0, 0, null);
 
