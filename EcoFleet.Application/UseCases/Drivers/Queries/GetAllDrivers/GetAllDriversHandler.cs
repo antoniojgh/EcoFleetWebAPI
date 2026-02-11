@@ -17,14 +17,13 @@ namespace EcoFleet.Application.UseCases.Drivers.Queries.GetAllDrivers
         public async Task<PaginatedDTO<DriverDetailDTO>> Handle(GetAllDriversQuery request, CancellationToken cancellationToken)
         {
             var driversFiltered = await _repository.GetFilteredAsync(request, cancellationToken);
-            var totalDrivers = await _repository.GetTotalNumberOfRecords(cancellationToken);
 
             var driversFilteredDTO = driversFiltered.Select(DriverDetailDTO.FromEntity);
 
             var paginatedResult = new PaginatedDTO<DriverDetailDTO>
             {
                 Items = driversFilteredDTO,
-                TotalCount = totalDrivers
+                TotalCount = driversFilteredDTO.Count()
             };
 
             return paginatedResult;

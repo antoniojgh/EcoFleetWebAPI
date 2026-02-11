@@ -10,12 +10,12 @@ GET {{EcoFleet.API_HostAddress}}?Page=1&RecordsByPage=10
 ###
 
 # @timeout 120000
-GET {{EcoFleet.API_HostAddress}}?Page=1&RecordsByPage=5&FirstName=John&LastName=Doe&Status=Available
+GET {{EcoFleet.API_HostAddress}}?Page=1&RecordsByPage=5&FirstName=Jane&LastName=Smith&Status=OnDuty
 
 ###
 
 # @timeout 120000
-GET {{EcoFleet.API_HostAddress}}?Page=1&RecordsByPage=10&License=DL-123456&CurrentVehicleId=1A309A1B-C058-4DA2-A7FC-FA64D2A92E51
+GET {{EcoFleet.API_HostAddress}}?Page=1&RecordsByPage=10&License=DL-789012&CurrentVehicleId=F0007597-EA71-43EB-AF0C-BD88CE2D559F
 
 ###
 
@@ -24,7 +24,7 @@ GET {{EcoFleet.API_HostAddress}}?Page=1&RecordsByPage=10&License=DL-123456&Curre
 ### ============================================================
 
 # @timeout 120000
-GET {{EcoFleet.API_HostAddress}}/D290F1EE-6C54-4B01-90E6-D701748F0851
+GET {{EcoFleet.API_HostAddress}}/EF893526-5C91-4E69-9E7A-8279C5939B7F
 
 ###
 
@@ -67,15 +67,15 @@ Content-Type: application/json
 ### ============================================================
 
 # @timeout 120000
-PUT {{EcoFleet.API_HostAddress}}/D290F1EE-6C54-4B01-90E6-D701748F0851
+PUT {{EcoFleet.API_HostAddress}}/8E64416F-576C-4E55-B78B-02B96C36D289
 Content-Type: application/json
 
 {
-    "Id": "D290F1EE-6C54-4B01-90E6-D701748F0851",
-    "FirstName": "John",
+    "Id": "8E64416F-576C-4E55-B78B-02B96C36D289",
+    "FirstName": "John Updated",
     "LastName": "Doe Updated",
     "License": "DL-999999",
-    "CurrentVehicleId": "F7936BAB-6CCD-47F2-86A1-13374AF5C51F"
+    "CurrentVehicleId": "9029BF2D-57C5-4221-9B12-81EB963BE3A3"
 }
 
 ###
@@ -85,14 +85,14 @@ Content-Type: application/json
 ### ============================================================
 
 # @timeout 120000
-PUT {{EcoFleet.API_HostAddress}}/D290F1EE-6C54-4B01-90E6-D701748F0851
+PUT {{EcoFleet.API_HostAddress}}/8E64416F-576C-4E55-B78B-02B96C36D289
 Content-Type: application/json
 
 {
-    "Id": "D290F1EE-6C54-4B01-90E6-D701748F0851",
+    "Id": "8E64416F-576C-4E55-B78B-02B96C36D289",
     "FirstName": "John",
-    "LastName": "Doe Updated",
-    "License": "DL-999999",
+    "LastName": "Doe",
+    "License": "DL-777777",
     "CurrentVehicleId": null
 }
 
@@ -103,7 +103,7 @@ Content-Type: application/json
 ### ============================================================
 
 # @timeout 120000
-PATCH {{EcoFleet.API_HostAddress}}/suspend/D290F1EE-6C54-4B01-90E6-D701748F0851
+PATCH {{EcoFleet.API_HostAddress}}/suspend/8E64416F-576C-4E55-B78B-02B96C36D289
 
 ###
 
@@ -112,7 +112,7 @@ PATCH {{EcoFleet.API_HostAddress}}/suspend/D290F1EE-6C54-4B01-90E6-D701748F0851
 ### ============================================================
 
 # @timeout 120000
-PATCH {{EcoFleet.API_HostAddress}}/reinstate/D290F1EE-6C54-4B01-90E6-D701748F0851
+PATCH {{EcoFleet.API_HostAddress}}/reinstate/8E64416F-576C-4E55-B78B-02B96C36D289
 
 ###
 
@@ -121,7 +121,7 @@ PATCH {{EcoFleet.API_HostAddress}}/reinstate/D290F1EE-6C54-4B01-90E6-D701748F085
 ### ============================================================
 
 # @timeout 120000
-DELETE {{EcoFleet.API_HostAddress}}/D290F1EE-6C54-4B01-90E6-D701748F0851
+DELETE {{EcoFleet.API_HostAddress}}/8E64416F-576C-4E55-B78B-02B96C36D289
 
 ###
 Content-Type: application/json

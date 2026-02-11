@@ -67,15 +67,15 @@ Content-Type: application/json
 ### ============================================================
 
 # @timeout 120000
-PUT {{EcoFleet.API_HostAddress}}/1A309A1B-C058-4DA2-A7FC-FA64D2A92E51
+PUT {{EcoFleet.API_HostAddress}}/F0007597-EA71-43EB-AF0C-BD88CE2D559F
 Content-Type: application/json
 
 {
-    "Id": "1A309A1B-C058-4DA2-A7FC-FA64D2A92E51",
-    "LicensePlate": "2222-7777",
+    "Id": "F0007597-EA71-43EB-AF0C-BD88CE2D559F",
+    "LicensePlate": "111-222",
     "Latitude": 7,
     "Longitude": 7,
-    "CurrentDriverId": "10056BCF-2843-4EF7-9A5D-CF750E6FD06B"
+    "CurrentDriverId": "EF893526-5C91-4E69-9E7A-8279C5939B7F"
 }
 
 ###
@@ -85,12 +85,12 @@ Content-Type: application/json
 ### ============================================================
 
 # @timeout 120000
-PUT {{EcoFleet.API_HostAddress}}/1A309A1B-C058-4DA2-A7FC-FA64D2A92E51
+PUT {{EcoFleet.API_HostAddress}}/9029BF2D-57C5-4221-9B12-81EB963BE3A3
 Content-Type: application/json
 
 {
-    "Id": "1A309A1B-C058-4DA2-A7FC-FA64D2A92E51",
-    "LicensePlate": "2222-7777",
+    "Id": "9029BF2D-57C5-4221-9B12-81EB963BE3A3",
+    "LicensePlate": "1234-BBC",
     "Latitude": 7,
     "Longitude": 7,
     "CurrentDriverId": null

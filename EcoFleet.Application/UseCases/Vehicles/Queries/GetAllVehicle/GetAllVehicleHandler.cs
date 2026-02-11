@@ -17,14 +17,13 @@ namespace EcoFleet.Application.UseCases.Vehicles.Queries.GetAllVehicle
         public async Task<PaginatedDTO<VehicleDetailDTO>> Handle(GetAllVehicleQuery request, CancellationToken cancellationToken)
         {
             var vehiclesFiltered = await _repository.GetFilteredAsync(request, cancellationToken);
-            var totalVehicles = await _repository.GetTotalNumberOfRecords(cancellationToken);
 
             var vehiclesFilteredDTO = vehiclesFiltered.Select(VehicleDetailDTO.FromEntity);
 
             var paginatedResult = new PaginatedDTO<VehicleDetailDTO>
             {
                 Items = vehiclesFilteredDTO,
-                TotalCount = totalVehicles
+                TotalCount = vehiclesFilteredDTO.Count()
             };
 
             return paginatedResult;
