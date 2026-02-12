@@ -1,6 +1,7 @@
 using EcoFleet.API.Middlewares;
 using EcoFleet.Application;
 using EcoFleet.Infrastructure;
+using Scalar.AspNetCore;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,7 +17,19 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 // 3. Add API Services
 builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddOpenApi(options =>
+{
+    options.AddDocumentTransformer((document, context, ct) =>
+    {
+        document.Info = new()
+        {
+            Title = "EcoFleet API",
+            Version = "v1",
+            Description = "Fleet management REST API for EcoFleet — manage vehicles, drivers, and assignments."
+        };
+        return Task.CompletedTask;
+    });
+});
 
 var app = builder.Build();
 
@@ -27,6 +40,12 @@ app.UseMiddleware<GlobalExceptionHandlerMiddleware>(); // <--- Our Custom Error 
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference(options =>
+    {
+        options
+            .WithTitle("EcoFleet API")
+            .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
+    });
 }
 
 app.UseSerilogRequestLogging(); // <--- Log HTTP requests cleanly

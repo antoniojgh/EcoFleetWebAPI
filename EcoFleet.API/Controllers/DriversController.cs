@@ -3,15 +3,21 @@ using EcoFleet.Application.UseCases.Drivers.Commands.DeleteDriver;
 using EcoFleet.Application.UseCases.Drivers.Commands.ReinstateDriver;
 using EcoFleet.Application.UseCases.Drivers.Commands.SuspendDriver;
 using EcoFleet.Application.UseCases.Drivers.Commands.UpdateDriver;
+using EcoFleet.Application.UseCases.Drivers.Queries.DTOs;
 using EcoFleet.Application.UseCases.Drivers.Queries.GetAllDrivers;
 using EcoFleet.Application.UseCases.Drivers.Queries.GetDriverById;
+using EcoFleet.Application.Utilities.Common;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EcoFleet.API.Controllers
 {
+    /// <summary>
+    /// Manages drivers — CRUD operations, vehicle assignments, suspension, and reinstatement.
+    /// </summary>
     [Route("api/v1/[controller]")]
     [ApiController]
+    [Produces("application/json")]
     public class DriversController : ControllerBase
     {
         private readonly ISender _sender;
@@ -21,7 +27,13 @@ namespace EcoFleet.API.Controllers
             _sender = sender;
         }
 
+        /// <summary>
+        /// Retrieves a paginated list of drivers with optional filters.
+        /// </summary>
+        /// <param name="query">Optional filters: name, license, status, vehicle, and pagination parameters.</param>
+        /// <returns>A paginated list of drivers matching the specified filters.</returns>
         [HttpGet]
+        [ProducesResponseType(typeof(PaginatedDTO<DriverDetailDTO>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllDrivers([FromQuery] GetAllDriversQuery query)
         {
             var result = await _sender.Send(query);
@@ -29,7 +41,14 @@ namespace EcoFleet.API.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Retrieves a single driver by their unique identifier.
+        /// </summary>
+        /// <param name="id">The unique identifier of the driver.</param>
+        /// <returns>The driver details.</returns>
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(DriverDetailDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetDriverById(Guid id)
         {
             var query = new GetDriverByIdQuery(id);
@@ -38,7 +57,15 @@ namespace EcoFleet.API.Controllers
             return Ok(driver);
         }
 
+        /// <summary>
+        /// Creates a new driver and optionally assigns them to a vehicle.
+        /// </summary>
+        /// <param name="command">The driver creation data including name, license, and optional vehicle ID.</param>
+        /// <returns>The unique identifier of the newly created driver.</returns>
         [HttpPost]
+        [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> CreateDriver([FromBody] CreateDriverCommand command)
         {
             var driverId = await _sender.Send(command);
@@ -46,7 +73,16 @@ namespace EcoFleet.API.Controllers
             return CreatedAtAction(nameof(CreateDriver), new { id = driverId }, driverId);
         }
 
+        /// <summary>
+        /// Updates an existing driver's name, license, and vehicle assignment.
+        /// </summary>
+        /// <param name="id">The unique identifier of the driver to update.</param>
+        /// <param name="command">The updated driver data.</param>
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> UpdateDriver(Guid id, [FromBody] UpdateDriverCommand command)
         {
             if (id != command.Id)
@@ -59,7 +95,14 @@ namespace EcoFleet.API.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Suspends an available driver. Fails if the driver is currently on duty.
+        /// </summary>
+        /// <param name="id">The unique identifier of the driver to suspend.</param>
         [HttpPatch("suspend/{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public async Task<IActionResult> SuspendDriver(Guid id)
         {
             var command = new SuspendDriverCommand(id);
@@ -68,7 +111,14 @@ namespace EcoFleet.API.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Reinstates a suspended driver back to available status.
+        /// </summary>
+        /// <param name="id">The unique identifier of the driver to reinstate.</param>
         [HttpPatch("reinstate/{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public async Task<IActionResult> ReinstateDriver(Guid id)
         {
             var command = new ReinstateDriverCommand(id);
@@ -77,7 +127,13 @@ namespace EcoFleet.API.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Permanently deletes a driver.
+        /// </summary>
+        /// <param name="id">The unique identifier of the driver to delete.</param>
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteDriver(Guid id)
         {
             var command = new DeleteDriverCommand(id);
