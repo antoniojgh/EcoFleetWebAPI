@@ -1,6 +1,7 @@
 using EcoFleet.Application.Exceptions;
 using EcoFleet.Application.Interfaces.Data;
 using EcoFleet.Domain.Entities;
+using EcoFleet.Domain.Enums;
 using MediatR;
 
 namespace EcoFleet.Application.UseCases.Drivers.Commands.DeleteDriver
@@ -24,6 +25,11 @@ namespace EcoFleet.Application.UseCases.Drivers.Commands.DeleteDriver
             if (driver is null)
             {
                 throw new NotFoundException(nameof(Driver), request.Id);
+            }
+
+            if (driver.Status == DriverStatus.OnDuty)
+            {
+                throw new BusinessRuleException("Cannot delete a driver who is currently on duty. Unassign them first.");
             }
 
             await _repository.Delete(driver, cancellationToken);

@@ -37,8 +37,9 @@ namespace EcoFleet.Infrastructure.Repositories
 
             if (filterDriverDTO.License is not null)
             {
-                var license = DriverLicense.Create(filterDriverDTO.License);
-                queryable = queryable.Where(x => x.License == license);
+                var license = DriverLicense.TryCreate(filterDriverDTO.License);
+                if (license is not null)
+                    queryable = queryable.Where(x => x.License == license);
             }
 
             if (filterDriverDTO.Status is not null)

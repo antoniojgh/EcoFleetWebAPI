@@ -70,4 +70,24 @@ public class LicensePlateTests
 
         plate1.GetHashCode().Should().NotBe(plate2.GetHashCode());
     }
+
+    [Fact]
+    public void TryCreate_WithValidValue_ShouldReturnLicensePlate()
+    {
+        var plate = LicensePlate.TryCreate("abc-123");
+
+        plate.Should().NotBeNull();
+        plate!.Value.Should().Be("ABC-123");
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    public void TryCreate_WithNullOrWhitespace_ShouldReturnNull(string? value)
+    {
+        var plate = LicensePlate.TryCreate(value);
+
+        plate.Should().BeNull();
+    }
 }

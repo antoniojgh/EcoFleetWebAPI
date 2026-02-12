@@ -1,6 +1,7 @@
 using EcoFleet.Application.Exceptions;
 using EcoFleet.Application.Interfaces.Data;
 using EcoFleet.Domain.Entities;
+using EcoFleet.Domain.Enums;
 using MediatR;
 
 namespace EcoFleet.Application.UseCases.Vehicles.Commands.DeleteVehicle
@@ -24,6 +25,11 @@ namespace EcoFleet.Application.UseCases.Vehicles.Commands.DeleteVehicle
             if (vehicle is null)
             {
                 throw new NotFoundException(nameof(Vehicle), request.Id);
+            }
+
+            if (vehicle.Status == VehicleStatus.Active)
+            {
+                throw new BusinessRuleException("Cannot delete a vehicle that is currently active. Unassign the driver first.");
             }
 
             await _repository.Delete(vehicle, cancellationToken);

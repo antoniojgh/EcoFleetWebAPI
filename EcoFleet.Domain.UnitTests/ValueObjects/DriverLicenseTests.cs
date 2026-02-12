@@ -95,4 +95,41 @@ public class DriverLicenseTests
 
         license1.GetHashCode().Should().NotBe(license2.GetHashCode());
     }
+
+    [Fact]
+    public void TryCreate_WithValidValue_ShouldReturnDriverLicense()
+    {
+        var license = DriverLicense.TryCreate("DL-123");
+
+        license.Should().NotBeNull();
+        license!.Value.Should().Be("DL-123");
+    }
+
+    [Fact]
+    public void TryCreate_WithValidValue_ShouldConvertToUpperCase()
+    {
+        var license = DriverLicense.TryCreate("abc-xyz");
+
+        license.Should().NotBeNull();
+        license!.Value.Should().Be("ABC-XYZ");
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    public void TryCreate_WithNullOrWhitespace_ShouldReturnNull(string? value)
+    {
+        var license = DriverLicense.TryCreate(value);
+
+        license.Should().BeNull();
+    }
+
+    [Fact]
+    public void TryCreate_WithTooLongValue_ShouldReturnNull()
+    {
+        var license = DriverLicense.TryCreate("ABCDEFGHIJKLMNOPQRSTU");
+
+        license.Should().BeNull();
+    }
 }

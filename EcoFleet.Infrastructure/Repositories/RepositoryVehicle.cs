@@ -27,8 +27,9 @@ namespace EcoFleet.Infrastructure.Repositories
 
             if (filterVehicleDTO.Plate is not null)
             {
-                var plate = LicensePlate.Create(filterVehicleDTO.Plate);
-                queryable = queryable.Where(x => x.Plate == plate);
+                var plate = LicensePlate.TryCreate(filterVehicleDTO.Plate);
+                if (plate is not null)
+                    queryable = queryable.Where(x => x.Plate == plate);
             }
 
             if (filterVehicleDTO.Status is not null)
