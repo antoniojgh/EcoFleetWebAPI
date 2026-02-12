@@ -24,8 +24,6 @@ public class GetAllVehicleHandlerTests
     {
         _repository.GetFilteredAsync(Arg.Any<FilterVehicleDTO>(), Arg.Any<CancellationToken>())
             .Returns(Enumerable.Empty<Vehicle>());
-        _repository.GetTotalNumberOfRecords(Arg.Any<CancellationToken>())
-            .Returns(0);
 
         var query = new GetAllVehicleQuery();
 
@@ -45,8 +43,6 @@ public class GetAllVehicleHandlerTests
         };
         _repository.GetFilteredAsync(Arg.Any<FilterVehicleDTO>(), Arg.Any<CancellationToken>())
             .Returns(vehicles);
-        _repository.GetTotalNumberOfRecords(Arg.Any<CancellationToken>())
-            .Returns(2);
 
         var query = new GetAllVehicleQuery();
 
@@ -67,8 +63,6 @@ public class GetAllVehicleHandlerTests
         };
         _repository.GetFilteredAsync(Arg.Any<FilterVehicleDTO>(), Arg.Any<CancellationToken>())
             .Returns(vehicles);
-        _repository.GetTotalNumberOfRecords(Arg.Any<CancellationToken>())
-            .Returns(2);
 
         var query = new GetAllVehicleQuery();
 
@@ -89,8 +83,6 @@ public class GetAllVehicleHandlerTests
     {
         _repository.GetFilteredAsync(Arg.Any<FilterVehicleDTO>(), Arg.Any<CancellationToken>())
             .Returns(Enumerable.Empty<Vehicle>());
-        _repository.GetTotalNumberOfRecords(Arg.Any<CancellationToken>())
-            .Returns(0);
 
         var query = new GetAllVehicleQuery();
 
@@ -108,14 +100,12 @@ public class GetAllVehicleHandlerTests
         };
         _repository.GetFilteredAsync(Arg.Any<FilterVehicleDTO>(), Arg.Any<CancellationToken>())
             .Returns(vehicles);
-        _repository.GetTotalNumberOfRecords(Arg.Any<CancellationToken>())
-            .Returns(50);
 
         var query = new GetAllVehicleQuery();
 
         var result = await _handler.Handle(query, CancellationToken.None);
 
         result.Items.Should().HaveCount(1);
-        result.TotalCount.Should().Be(50);
+        result.TotalCount.Should().Be(1);
     }
 }

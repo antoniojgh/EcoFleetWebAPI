@@ -3,7 +3,7 @@ using EcoFleet.Domain.Enums;
 using EcoFleet.Domain.ValueObjects;
 using FluentAssertions;
 
-namespace EcoFleet.Domain.UnitTests.Entities;
+namespace EcoFleet.Domain.UnitTests.Entities.VehicleTests;
 
 public class VehicleUnassignDriverTests
 {
