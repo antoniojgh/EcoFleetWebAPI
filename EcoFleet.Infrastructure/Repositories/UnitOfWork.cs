@@ -25,6 +25,8 @@ namespace EcoFleet.Infrastructure.Repositories
 
         private void ConvertDomainEventsToOutboxMessages()
         {
+            // Check if some entity that implement IHasDomainEvents has been modified and has new events created
+            // retrieved all entities with that condition
             var domainEntities = _dbContext.ChangeTracker
                 .Entries<IHasDomainEvents>()
                 .Where(x => x.Entity.DomainEvents.Any())

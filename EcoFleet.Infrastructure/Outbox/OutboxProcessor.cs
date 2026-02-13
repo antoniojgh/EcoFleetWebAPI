@@ -12,9 +12,9 @@ public class OutboxProcessor : BackgroundService
 {
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly ILogger<OutboxProcessor> _logger;
-    //private static readonly TimeSpan PollingInterval = TimeSpan.FromSeconds(10);
+    private static readonly TimeSpan PollingInterval = TimeSpan.FromSeconds(10);
     // AJGR temp, Delete the line below and uncomment the line above to test the processor more frequently (every 10 seconds instead of 3 minutes)
-    private static readonly TimeSpan PollingInterval = TimeSpan.FromSeconds(660);
+    //private static readonly TimeSpan PollingInterval = TimeSpan.FromSeconds(660);
     private const int BatchSize = 20;
 
     public OutboxProcessor(IServiceScopeFactory scopeFactory, ILogger<OutboxProcessor> logger)

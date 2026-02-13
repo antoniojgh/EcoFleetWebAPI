@@ -103,7 +103,7 @@ Content-Type: application/json
 ### ============================================================
 
 # @timeout 120000
-PATCH {{EcoFleet.API_HostAddress}}/suspend/8E64416F-576C-4E55-B78B-02B96C36D289
+PATCH {{EcoFleet.API_HostAddress}}/suspend/5829D905-5185-4F65-A339-5DE924D607E2
 
 ###
 
