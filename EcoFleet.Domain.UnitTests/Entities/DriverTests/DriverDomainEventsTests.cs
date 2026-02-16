@@ -12,7 +12,8 @@ public class DriverDomainEventsTests
     {
         var driver = new Driver(
             FullName.Create("John", "Doe"),
-            DriverLicense.Create("DL-123"));
+            DriverLicense.Create("DL-123"),
+            Email.Create("john@example.com"));
         driver.Suspend();
 
         driver.DomainEvents.Should().NotBeEmpty();
@@ -27,7 +28,8 @@ public class DriverDomainEventsTests
     {
         var driver = new Driver(
             FullName.Create("John", "Doe"),
-            DriverLicense.Create("DL-123"));
+            DriverLicense.Create("DL-123"),
+            Email.Create("john@example.com"));
 
         driver.Suspend();
 
@@ -43,7 +45,8 @@ public class DriverDomainEventsTests
     {
         var driver = new Driver(
             FullName.Create("John", "Doe"),
-            DriverLicense.Create("DL-123"));
+            DriverLicense.Create("DL-123"),
+            Email.Create("john@example.com"));
         driver.Suspend();
         driver.ClearDomainEvents();
 
@@ -61,7 +64,8 @@ public class DriverDomainEventsTests
     {
         var driver = new Driver(
             FullName.Create("John", "Doe"),
-            DriverLicense.Create("DL-123"));
+            DriverLicense.Create("DL-123"),
+            Email.Create("john@example.com"));
 
         driver.Suspend();
         driver.Reinstate();

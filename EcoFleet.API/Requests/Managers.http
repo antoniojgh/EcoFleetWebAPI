@@ -1,0 +1,71 @@
+@EcoFleet.API_HostAddress = https://localhost:7205/api/v1/managers
+
+### ============================================================
+### GET ALL MANAGERS (with filters and pagination)
+### ============================================================
+
+# @timeout 120000
+GET {{EcoFleet.API_HostAddress}}?Page=1&RecordsByPage=10
+
+###
+
+# @timeout 120000
+GET {{EcoFleet.API_HostAddress}}?Page=1&RecordsByPage=5&FirstName=Alice&LastName=Manager
+
+###
+
+# @timeout 120000
+GET {{EcoFleet.API_HostAddress}}?Page=1&RecordsByPage=10&Email=alice@example.com
+
+###
+
+### ============================================================
+### GET MANAGER BY ID
+### ============================================================
+
+# @timeout 120000
+GET {{EcoFleet.API_HostAddress}}/A1B2C3D4-E5F6-7890-ABCD-EF1234567890
+
+###
+
+### ============================================================
+### CREATE MANAGER
+### ============================================================
+
+# @timeout 120000
+POST {{EcoFleet.API_HostAddress}}
+Content-Type: application/json
+
+{
+    "FirstName": "Alice",
+    "LastName": "Manager",
+    "Email": "alice.manager@example.com"
+}
+
+###
+
+### ============================================================
+### UPDATE MANAGER
+### ============================================================
+
+# @timeout 120000
+PUT {{EcoFleet.API_HostAddress}}/A1B2C3D4-E5F6-7890-ABCD-EF1234567890
+Content-Type: application/json
+
+{
+    "Id": "A1B2C3D4-E5F6-7890-ABCD-EF1234567890",
+    "FirstName": "Alice Updated",
+    "LastName": "Manager Updated",
+    "Email": "alice.updated@example.com"
+}
+
+###
+
+### ============================================================
+### DELETE MANAGER
+### ============================================================
+
+# @timeout 120000
+DELETE {{EcoFleet.API_HostAddress}}/A1B2C3D4-E5F6-7890-ABCD-EF1234567890
+
+###

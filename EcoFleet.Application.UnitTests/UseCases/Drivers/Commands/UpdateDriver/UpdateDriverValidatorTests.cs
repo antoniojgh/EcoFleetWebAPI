@@ -10,7 +10,7 @@ public class UpdateDriverValidatorTests
     [Fact]
     public void Validate_WithValidCommand_ShouldHaveNoErrors()
     {
-        var command = new UpdateDriverCommand(Guid.NewGuid(), "John", "Doe", "DL-123456", null);
+        var command = new UpdateDriverCommand(Guid.NewGuid(), "John", "Doe", "DL-123456", "john@example.com", null, null, null);
 
         var result = _validator.TestValidate(command);
 
@@ -20,7 +20,7 @@ public class UpdateDriverValidatorTests
     [Fact]
     public void Validate_WithEmptyId_ShouldHaveError()
     {
-        var command = new UpdateDriverCommand(Guid.Empty, "John", "Doe", "DL-123", null);
+        var command = new UpdateDriverCommand(Guid.Empty, "John", "Doe", "DL-123", "john@example.com", null, null, null);
 
         var result = _validator.TestValidate(command);
 
@@ -34,7 +34,7 @@ public class UpdateDriverValidatorTests
     [InlineData("   ")]
     public void Validate_WithEmptyFirstName_ShouldHaveError(string? firstName)
     {
-        var command = new UpdateDriverCommand(Guid.NewGuid(), firstName!, "Doe", "DL-123", null);
+        var command = new UpdateDriverCommand(Guid.NewGuid(), firstName!, "Doe", "DL-123", "john@example.com", null, null, null);
 
         var result = _validator.TestValidate(command);
 
@@ -48,7 +48,7 @@ public class UpdateDriverValidatorTests
     [InlineData("   ")]
     public void Validate_WithEmptyLastName_ShouldHaveError(string? lastName)
     {
-        var command = new UpdateDriverCommand(Guid.NewGuid(), "John", lastName!, "DL-123", null);
+        var command = new UpdateDriverCommand(Guid.NewGuid(), "John", lastName!, "DL-123", "john@example.com", null, null, null);
 
         var result = _validator.TestValidate(command);
 
@@ -62,7 +62,7 @@ public class UpdateDriverValidatorTests
     [InlineData("   ")]
     public void Validate_WithEmptyLicense_ShouldHaveError(string? license)
     {
-        var command = new UpdateDriverCommand(Guid.NewGuid(), "John", "Doe", license!, null);
+        var command = new UpdateDriverCommand(Guid.NewGuid(), "John", "Doe", license!, "john@example.com", null, null, null);
 
         var result = _validator.TestValidate(command);
 
@@ -73,7 +73,7 @@ public class UpdateDriverValidatorTests
     [Fact]
     public void Validate_WithTooLongFirstName_ShouldHaveError()
     {
-        var command = new UpdateDriverCommand(Guid.NewGuid(), new string('A', 101), "Doe", "DL-123", null);
+        var command = new UpdateDriverCommand(Guid.NewGuid(), new string('A', 101), "Doe", "DL-123", "john@example.com", null, null, null);
 
         var result = _validator.TestValidate(command);
 
@@ -84,7 +84,7 @@ public class UpdateDriverValidatorTests
     [Fact]
     public void Validate_WithTooLongLastName_ShouldHaveError()
     {
-        var command = new UpdateDriverCommand(Guid.NewGuid(), "John", new string('A', 101), "DL-123", null);
+        var command = new UpdateDriverCommand(Guid.NewGuid(), "John", new string('A', 101), "DL-123", "john@example.com", null, null, null);
 
         var result = _validator.TestValidate(command);
 
@@ -95,7 +95,7 @@ public class UpdateDriverValidatorTests
     [Fact]
     public void Validate_WithTooLongLicense_ShouldHaveError()
     {
-        var command = new UpdateDriverCommand(Guid.NewGuid(), "John", "Doe", new string('A', 21), null);
+        var command = new UpdateDriverCommand(Guid.NewGuid(), "John", "Doe", new string('A', 21), "john@example.com", null, null, null);
 
         var result = _validator.TestValidate(command);
 
@@ -104,9 +104,31 @@ public class UpdateDriverValidatorTests
     }
 
     [Fact]
+    public void Validate_WithEmptyEmail_ShouldHaveError()
+    {
+        var command = new UpdateDriverCommand(Guid.NewGuid(), "John", "Doe", "DL-123", "", null, null, null);
+
+        var result = _validator.TestValidate(command);
+
+        result.ShouldHaveValidationErrorFor(x => x.Email)
+            .WithErrorMessage("Email is required.");
+    }
+
+    [Fact]
+    public void Validate_WithInvalidEmail_ShouldHaveError()
+    {
+        var command = new UpdateDriverCommand(Guid.NewGuid(), "John", "Doe", "DL-123", "not-an-email", null, null, null);
+
+        var result = _validator.TestValidate(command);
+
+        result.ShouldHaveValidationErrorFor(x => x.Email)
+            .WithErrorMessage("Email format is invalid.");
+    }
+
+    [Fact]
     public void Validate_WithAllFieldsInvalid_ShouldHaveMultipleErrors()
     {
-        var command = new UpdateDriverCommand(Guid.Empty, "", "", "", null);
+        var command = new UpdateDriverCommand(Guid.Empty, "", "", "", "", null, null, null);
 
         var result = _validator.TestValidate(command);
 
@@ -114,5 +136,6 @@ public class UpdateDriverValidatorTests
         result.ShouldHaveValidationErrorFor(x => x.FirstName);
         result.ShouldHaveValidationErrorFor(x => x.LastName);
         result.ShouldHaveValidationErrorFor(x => x.License);
+        result.ShouldHaveValidationErrorFor(x => x.Email);
     }
 }

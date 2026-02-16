@@ -10,7 +10,7 @@ namespace EcoFleet.Domain.UnitTests.Entities.DriverTests;
 public class DriverSuspendTests
 {
     private static Driver CreateAvailableDriver()
-        => new(FullName.Create("John", "Doe"), DriverLicense.Create("DL-123"));
+        => new(FullName.Create("John", "Doe"), DriverLicense.Create("DL-123"), Email.Create("john@example.com"));
 
     private static Driver CreateOnDutyDriver()
     {
@@ -18,6 +18,7 @@ public class DriverSuspendTests
         var driver = new Driver(
             FullName.Create("John", "Doe"),
             DriverLicense.Create("DL-123"),
+            Email.Create("john@example.com"),
             vehicleId);
         driver.ClearDomainEvents();
         return driver;

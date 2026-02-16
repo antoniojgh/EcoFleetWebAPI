@@ -10,6 +10,9 @@ namespace EcoFleet.Domain.Entities
     {
         public FullName Name { get; private set; }
         public DriverLicense License { get; private set; }
+        public Email Email { get; private set; }
+        public PhoneNumber? PhoneNumber { get; private set; }
+        public DateTime? DateOfBirth { get; private set; }
         public DriverStatus Status { get; private set; }
 
         public VehicleId? CurrentVehicleId { get; private set; }
@@ -19,18 +22,30 @@ namespace EcoFleet.Domain.Entities
         { }
 
         // Public Constructor: available driver without vehicle
-        public Driver(FullName name, DriverLicense license) : base(new DriverId(Guid.NewGuid()))
+        public Driver(FullName name, DriverLicense license, Email email, PhoneNumber? phoneNumber = null, DateTime? dateOfBirth = null)
+            : base(new DriverId(Guid.NewGuid()))
         {
+            ValidateDateOfBirth(dateOfBirth);
+
             Name = name;
             License = license;
+            Email = email;
+            PhoneNumber = phoneNumber;
+            DateOfBirth = dateOfBirth;
             Status = DriverStatus.Available;
         }
 
         // Public Constructor: driver assigned to a vehicle (on duty)
-        public Driver(FullName name, DriverLicense license, VehicleId vehicleId) : base(new DriverId(Guid.NewGuid()))
+        public Driver(FullName name, DriverLicense license, Email email, VehicleId vehicleId, PhoneNumber? phoneNumber = null, DateTime? dateOfBirth = null)
+            : base(new DriverId(Guid.NewGuid()))
         {
+            ValidateDateOfBirth(dateOfBirth);
+
             Name = name;
             License = license;
+            Email = email;
+            PhoneNumber = phoneNumber;
+            DateOfBirth = dateOfBirth;
             CurrentVehicleId = vehicleId;
             Status = DriverStatus.OnDuty;
         }
@@ -45,6 +60,28 @@ namespace EcoFleet.Domain.Entities
         public void UpdateLicense(DriverLicense license)
         {
             License = license;
+        }
+
+        public void UpdateEmail(Email email)
+        {
+            Email = email;
+        }
+
+        public void UpdatePhoneNumber(PhoneNumber? phoneNumber)
+        {
+            PhoneNumber = phoneNumber;
+        }
+
+        public void UpdateDateOfBirth(DateTime? dateOfBirth)
+        {
+            ValidateDateOfBirth(dateOfBirth);
+            DateOfBirth = dateOfBirth;
+        }
+
+        private static void ValidateDateOfBirth(DateTime? dateOfBirth)
+        {
+            if (dateOfBirth.HasValue && dateOfBirth.Value.Date > DateTime.UtcNow.Date)
+                throw new DomainException("Date of birth cannot be in the future.");
         }
 
         public void AssignVehicle(VehicleId vehicleId)

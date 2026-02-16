@@ -42,6 +42,30 @@ namespace EcoFleet.Infrastructure.Repositories
                     queryable = queryable.Where(x => x.License == license);
             }
 
+            if (filterDriverDTO.Email is not null)
+            {
+                var email = Email.TryCreate(filterDriverDTO.Email);
+                if (email is not null)
+                    queryable = queryable.Where(x => x.Email == email);
+            }
+
+            if (filterDriverDTO.PhoneNumber is not null)
+            {
+                var phoneNumber = PhoneNumber.TryCreate(filterDriverDTO.PhoneNumber);
+                if (phoneNumber is not null)
+                    queryable = queryable.Where(x => x.PhoneNumber == phoneNumber);
+            }
+
+            if (filterDriverDTO.DateOfBirthFrom is not null)
+            {
+                queryable = queryable.Where(x => x.DateOfBirth >= filterDriverDTO.DateOfBirthFrom);
+            }
+
+            if (filterDriverDTO.DateOfBirthTo is not null)
+            {
+                queryable = queryable.Where(x => x.DateOfBirth <= filterDriverDTO.DateOfBirthTo);
+            }
+
             if (filterDriverDTO.Status is not null)
             {
                 queryable = queryable.Where(x => x.Status == filterDriverDTO.Status);

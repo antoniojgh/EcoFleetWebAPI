@@ -31,10 +31,10 @@ public class UpdateVehicleHandlerTests
         => new(LicensePlate.Create("OLD-111"), Geolocation.Create(0, 0), new DriverId(driverId));
 
     private Driver CreateAvailableDriver()
-        => new(FullName.Create("John", "Doe"), DriverLicense.Create("DL-123"));
+        => new(FullName.Create("John", "Doe"), DriverLicense.Create("DL-123"), Email.Create("john@example.com"));
 
     private Driver CreateOnDutyDriver(VehicleId vehicleId)
-        => new(FullName.Create("John", "Doe"), DriverLicense.Create("DL-123"), vehicleId);
+        => new(FullName.Create("John", "Doe"), DriverLicense.Create("DL-123"), Email.Create("john@example.com"), vehicleId);
 
     private void SetupVehicleReturns(Vehicle vehicle)
     {

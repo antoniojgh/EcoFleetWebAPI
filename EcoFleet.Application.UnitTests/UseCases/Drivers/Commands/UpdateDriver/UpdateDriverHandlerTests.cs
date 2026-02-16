@@ -25,10 +25,10 @@ public class UpdateDriverHandlerTests
     }
 
     private Driver CreateAvailableDriver()
-        => new(FullName.Create("John", "Doe"), DriverLicense.Create("DL-123"));
+        => new(FullName.Create("John", "Doe"), DriverLicense.Create("DL-123"), Email.Create("john@example.com"));
 
     private Driver CreateOnDutyDriver(Guid vehicleId)
-        => new(FullName.Create("John", "Doe"), DriverLicense.Create("DL-123"), new VehicleId(vehicleId));
+        => new(FullName.Create("John", "Doe"), DriverLicense.Create("DL-123"), Email.Create("john@example.com"), new VehicleId(vehicleId));
 
     private Vehicle CreateIdleVehicle()
         => new(LicensePlate.Create("ABC-123"), Geolocation.Create(0, 0));
@@ -54,7 +54,7 @@ public class UpdateDriverHandlerTests
         _driverRepository.GetByIdAsync(Arg.Any<DriverId>(), Arg.Any<CancellationToken>())
             .Returns((Driver?)null);
 
-        var command = new UpdateDriverCommand(Guid.NewGuid(), "John", "Doe", "DL-123", null);
+        var command = new UpdateDriverCommand(Guid.NewGuid(), "John", "Doe", "DL-123", "john@example.com", null, null, null);
 
         var act = () => _handler.Handle(command, CancellationToken.None);
 
@@ -67,7 +67,7 @@ public class UpdateDriverHandlerTests
         _driverRepository.GetByIdAsync(Arg.Any<DriverId>(), Arg.Any<CancellationToken>())
             .Returns((Driver?)null);
 
-        var command = new UpdateDriverCommand(Guid.NewGuid(), "John", "Doe", "DL-123", null);
+        var command = new UpdateDriverCommand(Guid.NewGuid(), "John", "Doe", "DL-123", "john@example.com", null, null, null);
 
         try { await _handler.Handle(command, CancellationToken.None); } catch { }
 
@@ -81,13 +81,14 @@ public class UpdateDriverHandlerTests
         var driver = CreateAvailableDriver();
         SetupDriverReturns(driver);
 
-        var command = new UpdateDriverCommand(Guid.NewGuid(), "Jane", "Smith", "DL-999", null);
+        var command = new UpdateDriverCommand(Guid.NewGuid(), "Jane", "Smith", "DL-999", "jane@example.com", null, null, null);
 
         await _handler.Handle(command, CancellationToken.None);
 
         driver.Name.FirstName.Should().Be("Jane");
         driver.Name.LastName.Should().Be("Smith");
         driver.License.Value.Should().Be("DL-999");
+        driver.Email.Value.Should().Be("jane@example.com");
     }
 
     [Fact]
@@ -96,7 +97,7 @@ public class UpdateDriverHandlerTests
         var driver = CreateAvailableDriver();
         SetupDriverReturns(driver);
 
-        var command = new UpdateDriverCommand(Guid.NewGuid(), "Jane", "Smith", "DL-999", null);
+        var command = new UpdateDriverCommand(Guid.NewGuid(), "Jane", "Smith", "DL-999", "jane@example.com", null, null, null);
 
         await _handler.Handle(command, CancellationToken.None);
 
@@ -116,7 +117,7 @@ public class UpdateDriverHandlerTests
         var vehicle = CreateIdleVehicle();
         SetupVehicleReturns(new VehicleId(vehicleId), vehicle);
 
-        var command = new UpdateDriverCommand(Guid.NewGuid(), "John", "Doe", "DL-123", vehicleId);
+        var command = new UpdateDriverCommand(Guid.NewGuid(), "John", "Doe", "DL-123", "john@example.com", null, null, vehicleId);
 
         await _handler.Handle(command, CancellationToken.None);
 
@@ -135,7 +136,7 @@ public class UpdateDriverHandlerTests
         _vehicleRepository.GetByIdAsync(Arg.Any<VehicleId>(), Arg.Any<CancellationToken>())
             .Returns((Vehicle?)null);
 
-        var command = new UpdateDriverCommand(Guid.NewGuid(), "John", "Doe", "DL-123", Guid.NewGuid());
+        var command = new UpdateDriverCommand(Guid.NewGuid(), "John", "Doe", "DL-123", "john@example.com", null, null, Guid.NewGuid());
 
         var act = () => _handler.Handle(command, CancellationToken.None);
 
@@ -151,7 +152,7 @@ public class UpdateDriverHandlerTests
         var vehicle = CreateActiveVehicle(new DriverId(Guid.NewGuid()));
         SetupVehicleReturns(new VehicleId(vehicleId), vehicle);
 
-        var command = new UpdateDriverCommand(Guid.NewGuid(), "John", "Doe", "DL-123", vehicleId);
+        var command = new UpdateDriverCommand(Guid.NewGuid(), "John", "Doe", "DL-123", "john@example.com", null, null, vehicleId);
 
         var act = () => _handler.Handle(command, CancellationToken.None);
 
@@ -167,7 +168,7 @@ public class UpdateDriverHandlerTests
         driver.ClearDomainEvents();
         SetupDriverReturns(driver);
 
-        var command = new UpdateDriverCommand(Guid.NewGuid(), "John", "Doe", "DL-123", vehicleId);
+        var command = new UpdateDriverCommand(Guid.NewGuid(), "John", "Doe", "DL-123", "john@example.com", null, null, vehicleId);
 
         await _handler.Handle(command, CancellationToken.None);
 
@@ -184,7 +185,7 @@ public class UpdateDriverHandlerTests
         var vehicle = CreateActiveVehicle(driver.Id);
         SetupVehicleReturns(new VehicleId(vehicleId), vehicle);
 
-        var command = new UpdateDriverCommand(Guid.NewGuid(), "John", "Doe", "DL-123", null);
+        var command = new UpdateDriverCommand(Guid.NewGuid(), "John", "Doe", "DL-123", "john@example.com", null, null, null);
 
         await _handler.Handle(command, CancellationToken.None);
 
@@ -201,7 +202,7 @@ public class UpdateDriverHandlerTests
         driver.ClearDomainEvents();
         SetupDriverReturns(driver);
 
-        var command = new UpdateDriverCommand(Guid.NewGuid(), "John", "Doe", "DL-123", null);
+        var command = new UpdateDriverCommand(Guid.NewGuid(), "John", "Doe", "DL-123", "john@example.com", null, null, null);
 
         await _handler.Handle(command, CancellationToken.None);
 

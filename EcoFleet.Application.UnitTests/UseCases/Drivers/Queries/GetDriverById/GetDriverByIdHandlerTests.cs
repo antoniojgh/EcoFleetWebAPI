@@ -38,7 +38,8 @@ public class GetDriverByIdHandlerTests
     {
         var driver = new Driver(
             FullName.Create("John", "Doe"),
-            DriverLicense.Create("DL-123"));
+            DriverLicense.Create("DL-123"),
+            Email.Create("john@example.com"));
         _repository.GetByIdAsync(Arg.Any<DriverId>(), Arg.Any<CancellationToken>())
             .Returns(driver);
 
@@ -62,6 +63,7 @@ public class GetDriverByIdHandlerTests
         var driver = new Driver(
             FullName.Create("John", "Doe"),
             DriverLicense.Create("DL-123"),
+            Email.Create("john@example.com"),
             new VehicleId(vehicleId));
         _repository.GetByIdAsync(Arg.Any<DriverId>(), Arg.Any<CancellationToken>())
             .Returns(driver);
@@ -80,7 +82,8 @@ public class GetDriverByIdHandlerTests
         var driverGuid = Guid.NewGuid();
         var driver = new Driver(
             FullName.Create("John", "Doe"),
-            DriverLicense.Create("DL-123"));
+            DriverLicense.Create("DL-123"),
+            Email.Create("john@example.com"));
         _repository.GetByIdAsync(Arg.Any<DriverId>(), Arg.Any<CancellationToken>())
             .Returns(driver);
 

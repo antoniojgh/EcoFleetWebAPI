@@ -9,7 +9,7 @@ namespace EcoFleet.Domain.UnitTests.Entities.DriverTests;
 public class DriverAssignVehicleTests
 {
     private static Driver CreateAvailableDriver()
-        => new(FullName.Create("John", "Doe"), DriverLicense.Create("DL-123"));
+        => new(FullName.Create("John", "Doe"), DriverLicense.Create("DL-123"), Email.Create("john@example.com"));
 
     private static Driver CreateSuspendedDriver()
     {

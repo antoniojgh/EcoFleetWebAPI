@@ -25,7 +25,7 @@ public class CreateVehicleHandlerTests
     }
 
     private Driver CreateAvailableDriver(Guid driverId)
-        => new(FullName.Create("John", "Doe"), DriverLicense.Create("DL-123"));
+        => new(FullName.Create("John", "Doe"), DriverLicense.Create("DL-123"), Email.Create("john@example.com"));
 
     private void SetupDriverReturns(Guid driverId, Driver driver)
     {

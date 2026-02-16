@@ -30,9 +30,14 @@ namespace EcoFleet.Application.UseCases.Drivers.Commands.UpdateDriver
 
             var name = FullName.Create(request.FirstName, request.LastName);
             var license = DriverLicense.Create(request.License);
+            var email = Email.Create(request.Email);
+            var phoneNumber = request.PhoneNumber is not null ? PhoneNumber.Create(request.PhoneNumber) : null;
 
             driver.UpdateName(name);
             driver.UpdateLicense(license);
+            driver.UpdateEmail(email);
+            driver.UpdatePhoneNumber(phoneNumber);
+            driver.UpdateDateOfBirth(request.DateOfBirth);
 
             if (request.CurrentVehicleId.HasValue)
             {

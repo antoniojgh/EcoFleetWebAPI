@@ -19,6 +19,16 @@ GET {{EcoFleet.API_HostAddress}}?Page=1&RecordsByPage=10&License=DL-789012&Curre
 
 ###
 
+# @timeout 120000
+GET {{EcoFleet.API_HostAddress}}?Page=1&RecordsByPage=10&Email=john@example.com
+
+###
+
+# @timeout 120000
+GET {{EcoFleet.API_HostAddress}}?Page=1&RecordsByPage=10&PhoneNumber=%2B1234567890&DateOfBirthFrom=1990-01-01&DateOfBirthTo=2000-12-31
+
+###
+
 ### ============================================================
 ### GET DRIVER BY ID
 ### ============================================================
@@ -29,7 +39,7 @@ GET {{EcoFleet.API_HostAddress}}/EF893526-5C91-4E69-9E7A-8279C5939B7F
 ###
 
 ### ============================================================
-### CREATE DRIVER (without vehicle — Available)
+### CREATE DRIVER (without vehicle — Available, minimal fields)
 ### ============================================================
 
 # @timeout 120000
@@ -40,13 +50,16 @@ Content-Type: application/json
     "FirstName": "John",
     "LastName": "Doe",
     "License": "DL-123456",
+    "Email": "john.doe@example.com",
+    "PhoneNumber": null,
+    "DateOfBirth": null,
     "CurrentVehicleId": null
 }
 
 ###
 
 ### ============================================================
-### CREATE DRIVER (with vehicle — OnDuty)
+### CREATE DRIVER (with all fields and vehicle — OnDuty)
 ### ============================================================
 
 # @timeout 120000
@@ -57,13 +70,16 @@ Content-Type: application/json
     "FirstName": "Jane",
     "LastName": "Smith",
     "License": "DL-789012",
+    "Email": "jane.smith@example.com",
+    "PhoneNumber": "+1234567890",
+    "DateOfBirth": "1992-05-15",
     "CurrentVehicleId": "F0007597-EA71-43EB-AF0C-BD88CE2D559F"
 }
 
 ###
 
 ### ============================================================
-### UPDATE DRIVER (change name, license and assign vehicle)
+### UPDATE DRIVER (change all fields and assign vehicle)
 ### ============================================================
 
 # @timeout 120000
@@ -75,13 +91,16 @@ Content-Type: application/json
     "FirstName": "John Updated",
     "LastName": "Doe Updated",
     "License": "DL-999999",
+    "Email": "john.updated@example.com",
+    "PhoneNumber": "+0987654321",
+    "DateOfBirth": "1990-03-20",
     "CurrentVehicleId": "9029BF2D-57C5-4221-9B12-81EB963BE3A3"
 }
 
 ###
 
 ### ============================================================
-### UPDATE DRIVER (unassign vehicle — set to null)
+### UPDATE DRIVER (unassign vehicle and clear optional fields)
 ### ============================================================
 
 # @timeout 120000
@@ -93,6 +112,9 @@ Content-Type: application/json
     "FirstName": "John",
     "LastName": "Doe",
     "License": "DL-777777",
+    "Email": "john.doe@example.com",
+    "PhoneNumber": null,
+    "DateOfBirth": null,
     "CurrentVehicleId": null
 }
 
@@ -124,8 +146,3 @@ PATCH {{EcoFleet.API_HostAddress}}/reinstate/8E64416F-576C-4E55-B78B-02B96C36D28
 DELETE {{EcoFleet.API_HostAddress}}/8E64416F-576C-4E55-B78B-02B96C36D289
 
 ###
-Content-Type: application/json
-
-###
-
-# Response

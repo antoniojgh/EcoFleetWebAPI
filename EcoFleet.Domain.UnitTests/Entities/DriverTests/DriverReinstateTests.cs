@@ -13,7 +13,8 @@ public class DriverReinstateTests
     {
         var driver = new Driver(
             FullName.Create("John", "Doe"),
-            DriverLicense.Create("DL-123"));
+            DriverLicense.Create("DL-123"),
+            Email.Create("john@example.com"));
         driver.Suspend();
         driver.ClearDomainEvents();
         return driver;
@@ -46,7 +47,8 @@ public class DriverReinstateTests
     {
         var driver = new Driver(
             FullName.Create("John", "Doe"),
-            DriverLicense.Create("DL-123"));
+            DriverLicense.Create("DL-123"),
+            Email.Create("john@example.com"));
 
         var act = () => driver.Reinstate();
 
@@ -60,6 +62,7 @@ public class DriverReinstateTests
         var driver = new Driver(
             FullName.Create("John", "Doe"),
             DriverLicense.Create("DL-123"),
+            Email.Create("john@example.com"),
             new VehicleId(Guid.NewGuid()));
 
         var act = () => driver.Reinstate();
@@ -73,7 +76,8 @@ public class DriverReinstateTests
     {
         var driver = new Driver(
             FullName.Create("John", "Doe"),
-            DriverLicense.Create("DL-123"));
+            DriverLicense.Create("DL-123"),
+            Email.Create("john@example.com"));
 
         try { driver.Reinstate(); } catch { }
 

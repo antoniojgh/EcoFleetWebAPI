@@ -42,12 +42,32 @@ public class DriverConfiguration : IEntityTypeConfiguration<Driver>
             .HasMaxLength(20)
             .IsRequired();
 
-        // 4. Enum as String
+        // 4. Value Object: Email (Single Column)
+        builder.Property(d => d.Email)
+            .HasConversion(
+                email => email.Value,
+                value => Email.Create(value))
+            .HasMaxLength(256)
+            .IsRequired();
+
+        // 5. Value Object: PhoneNumber (Single Column, Nullable)
+        builder.Property(d => d.PhoneNumber)
+            .HasConversion(
+                phone => phone != null ? phone.Value : null,
+                value => value != null ? PhoneNumber.Create(value) : null)
+            .HasMaxLength(20)
+            .IsRequired(false);
+
+        // 6. DateOfBirth (Nullable)
+        builder.Property(d => d.DateOfBirth)
+            .IsRequired(false);
+
+        // 7. Enum as String
         builder.Property(d => d.Status)
             .HasConversion<string>()
             .HasMaxLength(20);
 
-        // 5. Foreign Key (Nullable)
+        // 8. Foreign Key (Nullable)
         builder.Property(d => d.CurrentVehicleId)
             .HasConversion(
                 id => id != null ? id.Value : (Guid?)null,

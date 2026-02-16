@@ -1,0 +1,67 @@
+@EcoFleet.API_HostAddress = https://localhost:7205/api/v1/managerdriverassignments
+
+### ============================================================
+### GET ALL ASSIGNMENTS (with filters and pagination)
+### ============================================================
+
+# @timeout 120000
+GET {{EcoFleet.API_HostAddress}}?Page=1&RecordsByPage=10
+
+###
+
+# @timeout 120000
+GET {{EcoFleet.API_HostAddress}}?Page=1&RecordsByPage=10&IsActive=true
+
+###
+
+# @timeout 120000
+GET {{EcoFleet.API_HostAddress}}?Page=1&RecordsByPage=10&ManagerId=A1B2C3D4-E5F6-7890-ABCD-EF1234567890
+
+###
+
+# @timeout 120000
+GET {{EcoFleet.API_HostAddress}}?Page=1&RecordsByPage=10&DriverId=EF893526-5C91-4E69-9E7A-8279C5939B7F&IsActive=false
+
+###
+
+### ============================================================
+### GET ASSIGNMENT BY ID
+### ============================================================
+
+# @timeout 120000
+GET {{EcoFleet.API_HostAddress}}/B2C3D4E5-F6A7-8901-BCDE-F12345678901
+
+###
+
+### ============================================================
+### CREATE ASSIGNMENT
+### ============================================================
+
+# @timeout 120000
+POST {{EcoFleet.API_HostAddress}}
+Content-Type: application/json
+
+{
+    "ManagerId": "A1B2C3D4-E5F6-7890-ABCD-EF1234567890",
+    "DriverId": "EF893526-5C91-4E69-9E7A-8279C5939B7F"
+}
+
+###
+
+### ============================================================
+### DEACTIVATE ASSIGNMENT
+### ============================================================
+
+# @timeout 120000
+PATCH {{EcoFleet.API_HostAddress}}/deactivate/B2C3D4E5-F6A7-8901-BCDE-F12345678901
+
+###
+
+### ============================================================
+### ACTIVATE ASSIGNMENT
+### ============================================================
+
+# @timeout 120000
+PATCH {{EcoFleet.API_HostAddress}}/activate/B2C3D4E5-F6A7-8901-BCDE-F12345678901
+
+###

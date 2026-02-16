@@ -1,0 +1,80 @@
+@EcoFleet.API_HostAddress = https://localhost:7205/api/v1/orders
+
+### ============================================================
+### GET ALL ORDERS (with filters and pagination)
+### ============================================================
+
+# @timeout 120000
+GET {{EcoFleet.API_HostAddress}}?Page=1&RecordsByPage=10
+
+###
+
+# @timeout 120000
+GET {{EcoFleet.API_HostAddress}}?Page=1&RecordsByPage=10&Status=Pending
+
+###
+
+# @timeout 120000
+GET {{EcoFleet.API_HostAddress}}?Page=1&RecordsByPage=5&DriverId=EF893526-5C91-4E69-9E7A-8279C5939B7F
+
+###
+
+# @timeout 120000
+GET {{EcoFleet.API_HostAddress}}?Page=1&RecordsByPage=10&DriverId=EF893526-5C91-4E69-9E7A-8279C5939B7F&Status=Completed
+
+###
+
+### ============================================================
+### GET ORDER BY ID
+### ============================================================
+
+# @timeout 120000
+GET {{EcoFleet.API_HostAddress}}/C3D4E5F6-A7B8-9012-CDEF-123456789012
+
+###
+
+### ============================================================
+### CREATE ORDER
+### ============================================================
+
+# @timeout 120000
+POST {{EcoFleet.API_HostAddress}}
+Content-Type: application/json
+
+{
+    "DriverId": "EF893526-5C91-4E69-9E7A-8279C5939B7F",
+    "PickUpLatitude": 40.416,
+    "PickUpLongitude": -3.703,
+    "DropOffLatitude": 41.385,
+    "DropOffLongitude": 2.173,
+    "Price": 25.50
+}
+
+###
+
+### ============================================================
+### START ORDER (Pending → InProgress)
+### ============================================================
+
+# @timeout 120000
+PATCH {{EcoFleet.API_HostAddress}}/start/C3D4E5F6-A7B8-9012-CDEF-123456789012
+
+###
+
+### ============================================================
+### COMPLETE ORDER (InProgress → Completed)
+### ============================================================
+
+# @timeout 120000
+PATCH {{EcoFleet.API_HostAddress}}/complete/C3D4E5F6-A7B8-9012-CDEF-123456789012
+
+###
+
+### ============================================================
+### CANCEL ORDER (Pending or InProgress → Cancelled)
+### ============================================================
+
+# @timeout 120000
+PATCH {{EcoFleet.API_HostAddress}}/cancel/C3D4E5F6-A7B8-9012-CDEF-123456789012
+
+###

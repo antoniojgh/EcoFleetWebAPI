@@ -13,6 +13,7 @@ public class DriverUnassignVehicleTests
         var driver = new Driver(
             FullName.Create("John", "Doe"),
             DriverLicense.Create("DL-123"),
+            Email.Create("john@example.com"),
             vehicleId);
         driver.ClearDomainEvents();
         return driver;
@@ -22,7 +23,8 @@ public class DriverUnassignVehicleTests
     {
         var driver = new Driver(
             FullName.Create("John", "Doe"),
-            DriverLicense.Create("DL-123"));
+            DriverLicense.Create("DL-123"),
+            Email.Create("john@example.com"));
         driver.Suspend();
         driver.ClearDomainEvents();
         return driver;
@@ -44,7 +46,8 @@ public class DriverUnassignVehicleTests
     {
         var driver = new Driver(
             FullName.Create("John", "Doe"),
-            DriverLicense.Create("DL-123"));
+            DriverLicense.Create("DL-123"),
+            Email.Create("john@example.com"));
 
         driver.UnassignVehicle();
 

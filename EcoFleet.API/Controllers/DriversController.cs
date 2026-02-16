@@ -30,7 +30,7 @@ namespace EcoFleet.API.Controllers
         /// <summary>
         /// Retrieves a paginated list of drivers with optional filters.
         /// </summary>
-        /// <param name="query">Optional filters: name, license, status, vehicle, and pagination parameters.</param>
+        /// <param name="query">Optional filters: name, license, email, phone, date of birth range, status, vehicle, and pagination parameters.</param>
         /// <returns>A paginated list of drivers matching the specified filters.</returns>
         [HttpGet]
         [ProducesResponseType(typeof(PaginatedDTO<DriverDetailDTO>), StatusCodes.Status200OK)]
@@ -60,7 +60,7 @@ namespace EcoFleet.API.Controllers
         /// <summary>
         /// Creates a new driver and optionally assigns them to a vehicle.
         /// </summary>
-        /// <param name="command">The driver creation data including name, license, and optional vehicle ID.</param>
+        /// <param name="command">The driver creation data including name, license, email, and optional phone number, date of birth, and vehicle ID.</param>
         /// <returns>The unique identifier of the newly created driver.</returns>
         [HttpPost]
         [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
@@ -74,7 +74,7 @@ namespace EcoFleet.API.Controllers
         }
 
         /// <summary>
-        /// Updates an existing driver's name, license, and vehicle assignment.
+        /// Updates an existing driver's name, license, email, phone number, date of birth, and vehicle assignment.
         /// </summary>
         /// <param name="id">The unique identifier of the driver to update.</param>
         /// <param name="command">The updated driver data.</param>

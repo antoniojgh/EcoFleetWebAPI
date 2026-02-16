@@ -24,6 +24,8 @@ namespace EcoFleet.Application.UseCases.Drivers.Commands.CreateDriver
         {
             var name = FullName.Create(request.FirstName, request.LastName);
             var license = DriverLicense.Create(request.License);
+            var email = Email.Create(request.Email);
+            var phoneNumber = request.PhoneNumber is not null ? PhoneNumber.Create(request.PhoneNumber) : null;
 
             Driver driver;
 
@@ -41,7 +43,7 @@ namespace EcoFleet.Application.UseCases.Drivers.Commands.CreateDriver
                     throw new BusinessRuleException($"Vehicle {request.CurrentVehicleId.Value} is not available for assignment.");
 
                 // Create driver assigned to vehicle
-                driver = new Driver(name, license, vehicleId);
+                driver = new Driver(name, license, email, vehicleId, phoneNumber, request.DateOfBirth);
 
                 // Sync the other aggregate: mark vehicle as Active with this driver
                 vehicle.AssignDriver(driver.Id);
@@ -49,7 +51,7 @@ namespace EcoFleet.Application.UseCases.Drivers.Commands.CreateDriver
             }
             else
             {
-                driver = new Driver(name, license);
+                driver = new Driver(name, license, email, phoneNumber, request.DateOfBirth);
             }
 
             await _driverRepository.AddAsync(driver);

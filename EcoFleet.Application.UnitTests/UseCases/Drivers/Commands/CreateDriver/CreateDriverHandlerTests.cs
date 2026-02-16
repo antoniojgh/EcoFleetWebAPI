@@ -36,7 +36,7 @@ public class CreateDriverHandlerTests
     [Fact]
     public async Task Handle_WithoutVehicle_ShouldReturnNonEmptyGuid()
     {
-        var command = new CreateDriverCommand("John", "Doe", "DL-123", null);
+        var command = new CreateDriverCommand("John", "Doe", "DL-123", "john@example.com", null, null, null);
 
         var result = await _handler.Handle(command, CancellationToken.None);
 
@@ -46,7 +46,7 @@ public class CreateDriverHandlerTests
     [Fact]
     public async Task Handle_WithoutVehicle_ShouldCallAddAsync()
     {
-        var command = new CreateDriverCommand("John", "Doe", "DL-123", null);
+        var command = new CreateDriverCommand("John", "Doe", "DL-123", "john@example.com", null, null, null);
 
         await _handler.Handle(command, CancellationToken.None);
 
@@ -54,6 +54,7 @@ public class CreateDriverHandlerTests
             d.Name.FirstName == "John" &&
             d.Name.LastName == "Doe" &&
             d.License.Value == "DL-123" &&
+            d.Email.Value == "john@example.com" &&
             d.Status == DriverStatus.Available &&
             d.CurrentVehicleId == null), CancellationToken.None);
     }
@@ -61,7 +62,7 @@ public class CreateDriverHandlerTests
     [Fact]
     public async Task Handle_WithoutVehicle_ShouldCallSaveChanges()
     {
-        var command = new CreateDriverCommand("John", "Doe", "DL-123", null);
+        var command = new CreateDriverCommand("John", "Doe", "DL-123", "john@example.com", null, null, null);
 
         await _handler.Handle(command, CancellationToken.None);
 
@@ -75,7 +76,7 @@ public class CreateDriverHandlerTests
         var vehicle = CreateIdleVehicle();
         SetupVehicleReturns(vehicleId, vehicle);
 
-        var command = new CreateDriverCommand("John", "Doe", "DL-123", vehicleId);
+        var command = new CreateDriverCommand("John", "Doe", "DL-123", "john@example.com", null, null, vehicleId);
 
         await _handler.Handle(command, CancellationToken.None);
 
@@ -92,7 +93,7 @@ public class CreateDriverHandlerTests
         var vehicle = CreateIdleVehicle();
         SetupVehicleReturns(vehicleId, vehicle);
 
-        var command = new CreateDriverCommand("John", "Doe", "DL-123", vehicleId);
+        var command = new CreateDriverCommand("John", "Doe", "DL-123", "john@example.com", null, null, vehicleId);
 
         await _handler.Handle(command, CancellationToken.None);
 
@@ -108,7 +109,7 @@ public class CreateDriverHandlerTests
         _vehicleRepository.GetByIdAsync(Arg.Any<VehicleId>(), Arg.Any<CancellationToken>())
             .Returns((Vehicle?)null);
 
-        var command = new CreateDriverCommand("John", "Doe", "DL-123", vehicleId);
+        var command = new CreateDriverCommand("John", "Doe", "DL-123", "john@example.com", null, null, vehicleId);
 
         var act = () => _handler.Handle(command, CancellationToken.None);
 
@@ -125,7 +126,7 @@ public class CreateDriverHandlerTests
             new DriverId(Guid.NewGuid()));
         SetupVehicleReturns(vehicleId, vehicle);
 
-        var command = new CreateDriverCommand("John", "Doe", "DL-123", vehicleId);
+        var command = new CreateDriverCommand("John", "Doe", "DL-123", "john@example.com", null, null, vehicleId);
 
         var act = () => _handler.Handle(command, CancellationToken.None);
 
@@ -143,7 +144,7 @@ public class CreateDriverHandlerTests
             new DriverId(Guid.NewGuid()));
         SetupVehicleReturns(vehicleId, vehicle);
 
-        var command = new CreateDriverCommand("John", "Doe", "DL-123", vehicleId);
+        var command = new CreateDriverCommand("John", "Doe", "DL-123", "john@example.com", null, null, vehicleId);
 
         try { await _handler.Handle(command, CancellationToken.None); } catch { }
 
@@ -154,7 +155,7 @@ public class CreateDriverHandlerTests
     [Fact]
     public async Task Handle_ShouldCallAddBeforeSaveChanges()
     {
-        var command = new CreateDriverCommand("John", "Doe", "DL-123", null);
+        var command = new CreateDriverCommand("John", "Doe", "DL-123", "john@example.com", null, null, null);
 
         await _handler.Handle(command, CancellationToken.None);
 
@@ -168,7 +169,7 @@ public class CreateDriverHandlerTests
     [Fact]
     public async Task Handle_TwoInvocations_ShouldReturnDifferentIds()
     {
-        var command = new CreateDriverCommand("John", "Doe", "DL-123", null);
+        var command = new CreateDriverCommand("John", "Doe", "DL-123", "john@example.com", null, null, null);
 
         var result1 = await _handler.Handle(command, CancellationToken.None);
         var result2 = await _handler.Handle(command, CancellationToken.None);

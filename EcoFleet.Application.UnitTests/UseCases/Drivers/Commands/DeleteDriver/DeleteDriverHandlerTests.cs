@@ -51,7 +51,7 @@ public class DeleteDriverHandlerTests
     [Fact]
     public async Task Handle_WhenDriverExists_ShouldCallDelete()
     {
-        var driver = new Driver(FullName.Create("John", "Doe"), DriverLicense.Create("DL-123"));
+        var driver = new Driver(FullName.Create("John", "Doe"), DriverLicense.Create("DL-123"), Email.Create("john@example.com"));
         _repository.GetByIdAsync(Arg.Any<DriverId>(), Arg.Any<CancellationToken>())
             .Returns(driver);
 
@@ -65,7 +65,7 @@ public class DeleteDriverHandlerTests
     [Fact]
     public async Task Handle_WhenDriverExists_ShouldCallSaveChanges()
     {
-        var driver = new Driver(FullName.Create("John", "Doe"), DriverLicense.Create("DL-123"));
+        var driver = new Driver(FullName.Create("John", "Doe"), DriverLicense.Create("DL-123"), Email.Create("john@example.com"));
         _repository.GetByIdAsync(Arg.Any<DriverId>(), Arg.Any<CancellationToken>())
             .Returns(driver);
 
@@ -79,7 +79,7 @@ public class DeleteDriverHandlerTests
     [Fact]
     public async Task Handle_WhenDriverExists_ShouldCallDeleteBeforeSaveChanges()
     {
-        var driver = new Driver(FullName.Create("John", "Doe"), DriverLicense.Create("DL-123"));
+        var driver = new Driver(FullName.Create("John", "Doe"), DriverLicense.Create("DL-123"), Email.Create("john@example.com"));
         _repository.GetByIdAsync(Arg.Any<DriverId>(), Arg.Any<CancellationToken>())
             .Returns(driver);
 

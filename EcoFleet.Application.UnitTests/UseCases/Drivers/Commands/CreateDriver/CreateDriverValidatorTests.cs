@@ -10,7 +10,7 @@ public class CreateDriverValidatorTests
     [Fact]
     public void Validate_WithValidCommand_ShouldHaveNoErrors()
     {
-        var command = new CreateDriverCommand("John", "Doe", "DL-123456", null);
+        var command = new CreateDriverCommand("John", "Doe", "DL-123456", "john@example.com", null, null, null);
 
         var result = _validator.TestValidate(command);
 
@@ -20,7 +20,7 @@ public class CreateDriverValidatorTests
     [Fact]
     public void Validate_WithValidCommandAndVehicle_ShouldHaveNoErrors()
     {
-        var command = new CreateDriverCommand("John", "Doe", "DL-123456", Guid.NewGuid());
+        var command = new CreateDriverCommand("John", "Doe", "DL-123456", "john@example.com", null, null, Guid.NewGuid());
 
         var result = _validator.TestValidate(command);
 
@@ -33,7 +33,7 @@ public class CreateDriverValidatorTests
     [InlineData("   ")]
     public void Validate_WithEmptyFirstName_ShouldHaveError(string? firstName)
     {
-        var command = new CreateDriverCommand(firstName!, "Doe", "DL-123", null);
+        var command = new CreateDriverCommand(firstName!, "Doe", "DL-123", "john@example.com", null, null, null);
 
         var result = _validator.TestValidate(command);
 
@@ -47,7 +47,7 @@ public class CreateDriverValidatorTests
     [InlineData("   ")]
     public void Validate_WithEmptyLastName_ShouldHaveError(string? lastName)
     {
-        var command = new CreateDriverCommand("John", lastName!, "DL-123", null);
+        var command = new CreateDriverCommand("John", lastName!, "DL-123", "john@example.com", null, null, null);
 
         var result = _validator.TestValidate(command);
 
@@ -61,7 +61,7 @@ public class CreateDriverValidatorTests
     [InlineData("   ")]
     public void Validate_WithEmptyLicense_ShouldHaveError(string? license)
     {
-        var command = new CreateDriverCommand("John", "Doe", license!, null);
+        var command = new CreateDriverCommand("John", "Doe", license!, "john@example.com", null, null, null);
 
         var result = _validator.TestValidate(command);
 
@@ -72,7 +72,7 @@ public class CreateDriverValidatorTests
     [Fact]
     public void Validate_WithTooLongFirstName_ShouldHaveError()
     {
-        var command = new CreateDriverCommand(new string('A', 101), "Doe", "DL-123", null);
+        var command = new CreateDriverCommand(new string('A', 101), "Doe", "DL-123", "john@example.com", null, null, null);
 
         var result = _validator.TestValidate(command);
 
@@ -83,7 +83,7 @@ public class CreateDriverValidatorTests
     [Fact]
     public void Validate_WithTooLongLastName_ShouldHaveError()
     {
-        var command = new CreateDriverCommand("John", new string('A', 101), "DL-123", null);
+        var command = new CreateDriverCommand("John", new string('A', 101), "DL-123", "john@example.com", null, null, null);
 
         var result = _validator.TestValidate(command);
 
@@ -94,7 +94,7 @@ public class CreateDriverValidatorTests
     [Fact]
     public void Validate_WithTooLongLicense_ShouldHaveError()
     {
-        var command = new CreateDriverCommand("John", "Doe", new string('A', 21), null);
+        var command = new CreateDriverCommand("John", "Doe", new string('A', 21), "john@example.com", null, null, null);
 
         var result = _validator.TestValidate(command);
 
@@ -103,9 +103,53 @@ public class CreateDriverValidatorTests
     }
 
     [Fact]
+    public void Validate_WithEmptyEmail_ShouldHaveError()
+    {
+        var command = new CreateDriverCommand("John", "Doe", "DL-123", "", null, null, null);
+
+        var result = _validator.TestValidate(command);
+
+        result.ShouldHaveValidationErrorFor(x => x.Email)
+            .WithErrorMessage("Email is required.");
+    }
+
+    [Fact]
+    public void Validate_WithInvalidEmail_ShouldHaveError()
+    {
+        var command = new CreateDriverCommand("John", "Doe", "DL-123", "not-an-email", null, null, null);
+
+        var result = _validator.TestValidate(command);
+
+        result.ShouldHaveValidationErrorFor(x => x.Email)
+            .WithErrorMessage("Email format is invalid.");
+    }
+
+    [Fact]
+    public void Validate_WithTooLongPhoneNumber_ShouldHaveError()
+    {
+        var command = new CreateDriverCommand("John", "Doe", "DL-123", "john@example.com", new string('1', 21), null, null);
+
+        var result = _validator.TestValidate(command);
+
+        result.ShouldHaveValidationErrorFor(x => x.PhoneNumber)
+            .WithErrorMessage("Phone number is too long.");
+    }
+
+    [Fact]
+    public void Validate_WithFutureDateOfBirth_ShouldHaveError()
+    {
+        var command = new CreateDriverCommand("John", "Doe", "DL-123", "john@example.com", null, DateTime.UtcNow.Date.AddDays(1), null);
+
+        var result = _validator.TestValidate(command);
+
+        result.ShouldHaveValidationErrorFor(x => x.DateOfBirth)
+            .WithErrorMessage("Date of birth cannot be in the future.");
+    }
+
+    [Fact]
     public void Validate_WithMaxLengthValues_ShouldHaveNoErrors()
     {
-        var command = new CreateDriverCommand(new string('A', 100), new string('B', 100), new string('C', 20), null);
+        var command = new CreateDriverCommand(new string('A', 100), new string('B', 100), new string('C', 20), "john@example.com", null, null, null);
 
         var result = _validator.TestValidate(command);
 
@@ -115,12 +159,13 @@ public class CreateDriverValidatorTests
     [Fact]
     public void Validate_WithAllFieldsInvalid_ShouldHaveMultipleErrors()
     {
-        var command = new CreateDriverCommand("", "", "", null);
+        var command = new CreateDriverCommand("", "", "", "", null, null, null);
 
         var result = _validator.TestValidate(command);
 
         result.ShouldHaveValidationErrorFor(x => x.FirstName);
         result.ShouldHaveValidationErrorFor(x => x.LastName);
         result.ShouldHaveValidationErrorFor(x => x.License);
+        result.ShouldHaveValidationErrorFor(x => x.Email);
     }
 }

@@ -8,6 +8,9 @@ namespace EcoFleet.Application.UseCases.Drivers.Queries.DTOs
         string FirstName,
         string LastName,
         string License,
+        string Email,
+        string? PhoneNumber,
+        DateTime? DateOfBirth,
         DriverStatus Status,
         Guid? CurrentVehicleId
     )
@@ -18,6 +21,9 @@ namespace EcoFleet.Application.UseCases.Drivers.Queries.DTOs
                 driver.Name.FirstName,
                 driver.Name.LastName,
                 driver.License.Value,
+                driver.Email.Value,
+                driver.PhoneNumber?.Value,
+                driver.DateOfBirth,
                 driver.Status,
                 driver.CurrentVehicleId?.Value
             );

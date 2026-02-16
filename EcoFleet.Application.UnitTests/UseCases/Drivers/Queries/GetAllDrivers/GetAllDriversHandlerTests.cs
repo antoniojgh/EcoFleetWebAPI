@@ -38,8 +38,8 @@ public class GetAllDriversHandlerTests
     {
         var drivers = new List<Driver>
         {
-            new(FullName.Create("John", "Doe"), DriverLicense.Create("DL-111")),
-            new(FullName.Create("Jane", "Smith"), DriverLicense.Create("DL-222"))
+            new(FullName.Create("John", "Doe"), DriverLicense.Create("DL-111"), Email.Create("john@example.com")),
+            new(FullName.Create("Jane", "Smith"), DriverLicense.Create("DL-222"), Email.Create("jane@example.com"))
         };
         _repository.GetFilteredAsync(Arg.Any<FilterDriverDTO>(), Arg.Any<CancellationToken>())
             .Returns(drivers);
@@ -58,8 +58,8 @@ public class GetAllDriversHandlerTests
         var vehicleId = Guid.NewGuid();
         var drivers = new List<Driver>
         {
-            new(FullName.Create("John", "Doe"), DriverLicense.Create("DL-111")),
-            new(FullName.Create("Jane", "Smith"), DriverLicense.Create("DL-222"), new VehicleId(vehicleId))
+            new(FullName.Create("John", "Doe"), DriverLicense.Create("DL-111"), Email.Create("john@example.com")),
+            new(FullName.Create("Jane", "Smith"), DriverLicense.Create("DL-222"), Email.Create("jane@example.com"), new VehicleId(vehicleId))
         };
         _repository.GetFilteredAsync(Arg.Any<FilterDriverDTO>(), Arg.Any<CancellationToken>())
             .Returns(drivers);

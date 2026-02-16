@@ -53,7 +53,7 @@ public class SuspendDriverHandlerTests
     [Fact]
     public async Task Handle_WhenDriverIsAvailable_ShouldSuspend()
     {
-        var driver = new Driver(FullName.Create("John", "Doe"), DriverLicense.Create("DL-123"));
+        var driver = new Driver(FullName.Create("John", "Doe"), DriverLicense.Create("DL-123"), Email.Create("john@example.com"));
         _repository.GetByIdAsync(Arg.Any<DriverId>(), Arg.Any<CancellationToken>())
             .Returns(driver);
 
@@ -67,7 +67,7 @@ public class SuspendDriverHandlerTests
     [Fact]
     public async Task Handle_WhenDriverIsAvailable_ShouldCallUpdateAndSaveChanges()
     {
-        var driver = new Driver(FullName.Create("John", "Doe"), DriverLicense.Create("DL-123"));
+        var driver = new Driver(FullName.Create("John", "Doe"), DriverLicense.Create("DL-123"), Email.Create("john@example.com"));
         _repository.GetByIdAsync(Arg.Any<DriverId>(), Arg.Any<CancellationToken>())
             .Returns(driver);
 
@@ -88,6 +88,7 @@ public class SuspendDriverHandlerTests
         var driver = new Driver(
             FullName.Create("John", "Doe"),
             DriverLicense.Create("DL-123"),
+            Email.Create("john@example.com"),
             new VehicleId(Guid.NewGuid()));
         _repository.GetByIdAsync(Arg.Any<DriverId>(), Arg.Any<CancellationToken>())
             .Returns(driver);

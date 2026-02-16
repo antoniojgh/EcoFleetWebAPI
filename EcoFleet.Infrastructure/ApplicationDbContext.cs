@@ -12,6 +12,9 @@ namespace EcoFleet.Infrastructure
 
         public DbSet<Vehicle> Vehicles { get; set; }
         public DbSet<Driver> Drivers { get; set; }
+        public DbSet<Manager> Managers { get; set; }
+        public DbSet<ManagerDriverAssignment> ManagerDriverAssignments { get; set; }
+        public DbSet<Order> Orders { get; set; }
         public DbSet<OutboxMessage> OutboxMessages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

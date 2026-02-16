@@ -25,7 +25,7 @@ public class ReinstateDriverHandlerTests
 
     private static Driver CreateSuspendedDriver()
     {
-        var driver = new Driver(FullName.Create("John", "Doe"), DriverLicense.Create("DL-123"));
+        var driver = new Driver(FullName.Create("John", "Doe"), DriverLicense.Create("DL-123"), Email.Create("john@example.com"));
         driver.Suspend();
         driver.ClearDomainEvents();
         return driver;
@@ -93,7 +93,7 @@ public class ReinstateDriverHandlerTests
     [Fact]
     public async Task Handle_WhenDriverIsAvailable_ShouldThrowDomainException()
     {
-        var driver = new Driver(FullName.Create("John", "Doe"), DriverLicense.Create("DL-123"));
+        var driver = new Driver(FullName.Create("John", "Doe"), DriverLicense.Create("DL-123"), Email.Create("john@example.com"));
         _repository.GetByIdAsync(Arg.Any<DriverId>(), Arg.Any<CancellationToken>())
             .Returns(driver);
 
