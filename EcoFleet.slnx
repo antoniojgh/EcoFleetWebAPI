@@ -7,6 +7,7 @@
     <Project Path="EcoFleet.Domain/EcoFleet.Domain.csproj" />
   </Folder>
   <Folder Name="/Infrastructure/">
+    <Project Path="EcoFleet.Emails/EcoFleet.Emails.csproj" Id="2481c5d9-5d82-44c0-9e6c-e1e66dc24a97" />
     <Project Path="EcoFleet.Infrastructure/EcoFleet.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/Tests/">

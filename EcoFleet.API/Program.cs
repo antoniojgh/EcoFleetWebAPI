@@ -3,6 +3,7 @@ using EcoFleet.Application;
 using EcoFleet.Infrastructure;
 using Scalar.AspNetCore;
 using Serilog;
+using EcoFleet.Emails;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,7 @@ builder.Host.UseSerilog((context, configuration) =>
 // These extension methods come from the DependencyInjection.cs files we created in each layer
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddEmails();
 
 // 3. Add API Services
 builder.Services.AddControllers();

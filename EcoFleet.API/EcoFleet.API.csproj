@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn>
+    <UserSecretsId>792b7618-169d-408c-b652-7b4d4e5d6f32</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EcoFleet.Application\EcoFleet.Application.csproj" />
+    <ProjectReference Include="..\EcoFleet.Emails\EcoFleet.Emails.csproj" />
     <ProjectReference Include="..\EcoFleet.Infrastructure\EcoFleet.Infrastructure.csproj" />
   </ItemGroup>
 

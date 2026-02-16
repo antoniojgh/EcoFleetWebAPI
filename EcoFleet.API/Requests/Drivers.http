@@ -47,12 +47,12 @@ POST {{EcoFleet.API_HostAddress}}
 Content-Type: application/json
 
 {
-    "FirstName": "John",
-    "LastName": "Doe",
+    "FirstName": "Antonio",
+    "LastName": "Garrido",
     "License": "DL-123456",
-    "Email": "john.doe@example.com",
+    "Email": "antoniojaviergr@gmail.com",
     "PhoneNumber": null,
-    "DateOfBirth": null,
+    "DateOfBirth": "1993-04-27",
     "CurrentVehicleId": null
 }
 
@@ -125,7 +125,7 @@ Content-Type: application/json
 ### ============================================================
 
 # @timeout 120000
-PATCH {{EcoFleet.API_HostAddress}}/suspend/5829D905-5185-4F65-A339-5DE924D607E2
+PATCH {{EcoFleet.API_HostAddress}}/suspend/E63DBB1C-FBBA-4075-9844-7A44887B14F5
 
 ###
 
