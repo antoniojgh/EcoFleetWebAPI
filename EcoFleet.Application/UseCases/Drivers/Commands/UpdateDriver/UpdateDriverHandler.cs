@@ -58,17 +58,15 @@ namespace EcoFleet.Application.UseCases.Drivers.Commands.UpdateDriver
                     if (driver.CurrentVehicleId is not null)
                     {
                         var previousVehicle = await _vehicleRepository.GetByIdAsync(driver.CurrentVehicleId, cancellationToken);
+                       
                         if (previousVehicle is not null)
-                        {
                             previousVehicle.UnassignDriver();
-                            await _vehicleRepository.Update(previousVehicle, cancellationToken);
-                        }
+                     
                     }
 
                     // 3. Sync both aggregates
                     driver.AssignVehicle(newVehicleId);
                     newVehicle.AssignDriver(driver.Id);
-                    await _vehicleRepository.Update(newVehicle, cancellationToken);
                 }
             }
             else
@@ -77,17 +75,14 @@ namespace EcoFleet.Application.UseCases.Drivers.Commands.UpdateDriver
                 {
                     // Release the current vehicle
                     var currentVehicle = await _vehicleRepository.GetByIdAsync(driver.CurrentVehicleId, cancellationToken);
+                    
                     if (currentVehicle is not null)
-                    {
                         currentVehicle.UnassignDriver();
-                        await _vehicleRepository.Update(currentVehicle, cancellationToken);
-                    }
 
                     driver.UnassignVehicle();
                 }
             }
 
-            await _driverRepository.Update(driver, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }

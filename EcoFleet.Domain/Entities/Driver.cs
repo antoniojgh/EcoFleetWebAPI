@@ -25,8 +25,6 @@ namespace EcoFleet.Domain.Entities
         public Driver(FullName name, DriverLicense license, Email email, PhoneNumber? phoneNumber = null, DateTime? dateOfBirth = null)
             : base(new DriverId(Guid.NewGuid()))
         {
-            ValidateDateOfBirth(dateOfBirth);
-
             Name = name;
             License = license;
             Email = email;
@@ -39,8 +37,6 @@ namespace EcoFleet.Domain.Entities
         public Driver(FullName name, DriverLicense license, Email email, VehicleId vehicleId, PhoneNumber? phoneNumber = null, DateTime? dateOfBirth = null)
             : base(new DriverId(Guid.NewGuid()))
         {
-            ValidateDateOfBirth(dateOfBirth);
-
             Name = name;
             License = license;
             Email = email;
@@ -74,14 +70,7 @@ namespace EcoFleet.Domain.Entities
 
         public void UpdateDateOfBirth(DateTime? dateOfBirth)
         {
-            ValidateDateOfBirth(dateOfBirth);
             DateOfBirth = dateOfBirth;
-        }
-
-        private static void ValidateDateOfBirth(DateTime? dateOfBirth)
-        {
-            if (dateOfBirth.HasValue && dateOfBirth.Value.Date > DateTime.UtcNow.Date)
-                throw new DomainException("Date of birth cannot be in the future.");
         }
 
         public void AssignVehicle(VehicleId vehicleId)

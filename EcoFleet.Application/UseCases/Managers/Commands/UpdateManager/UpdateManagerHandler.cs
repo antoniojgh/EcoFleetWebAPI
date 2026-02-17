@@ -31,7 +31,6 @@ namespace EcoFleet.Application.UseCases.Managers.Commands.UpdateManager
             manager.UpdateName(name);
             manager.UpdateEmail(email);
 
-            await _managerRepository.Update(manager, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
