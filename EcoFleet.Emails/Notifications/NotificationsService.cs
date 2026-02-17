@@ -1,8 +1,8 @@
-﻿using System.Globalization;
-using System.Net;
+﻿using System.Net;
 using System.Net.Mail;
 using EcoFleet.Application.Interfaces.Emails;
 using EcoFleet.Application.UseCases.Drivers.EventHandlers.EventDriverSuspended;
+using EcoFleet.Application.UseCases.Drivers.EventHandlers.EventDriverReinstated;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
@@ -26,6 +26,21 @@ namespace EcoFleet.Emails.Notifications
         Dear {eventDTO.FirstName} {eventDTO.LastName}, 
             
         We inform you that your activity as a driver has been suspended.
+
+        EcoFleet Team
+        """;
+
+            await SendMessage(eventDTO.Email, asunto, cuerpo);
+        }
+
+        public async Task SendDriverReinstatedNotification(DriverReinstatedEventDTO eventDTO)
+        {
+            var asunto = "Reinstated driver";
+
+            var cuerpo = $"""
+        Dear {eventDTO.FirstName} {eventDTO.LastName}, 
+            
+        We inform you that your activity as a driver has been reinstated.
 
         EcoFleet Team
         """;

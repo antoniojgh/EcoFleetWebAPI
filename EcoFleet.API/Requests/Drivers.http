@@ -134,7 +134,7 @@ PATCH {{EcoFleet.API_HostAddress}}/suspend/E63DBB1C-FBBA-4075-9844-7A44887B14F5
 ### ============================================================
 
 # @timeout 120000
-PATCH {{EcoFleet.API_HostAddress}}/reinstate/8E64416F-576C-4E55-B78B-02B96C36D289
+PATCH {{EcoFleet.API_HostAddress}}/reinstate/E63DBB1C-FBBA-4075-9844-7A44887B14F5
 
 ###
 

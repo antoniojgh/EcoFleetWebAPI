@@ -1,7 +1,6 @@
 ﻿using EcoFleet.Application.Exceptions;
 using EcoFleet.Application.Interfaces.Data;
 using EcoFleet.Application.Interfaces.Emails;
-using EcoFleet.Application.UseCases.Drivers.EventHandlers.EventDriverSuspended;
 using EcoFleet.Domain.Entities;
 using EcoFleet.Domain.Events;
 using MediatR;
@@ -10,13 +9,13 @@ using Microsoft.Extensions.Logging;
 namespace EcoFleet.Application.UseCases.Drivers.EventHandlers.EventDriverReinstated
 {
     // 1. Implement INotificationHandler<T> for the specific event you want to consume
-    public class DriverSuspendedEventHandler : INotificationHandler<DriverSuspendedEvent>
+    public class DriverReinstatedEventHandler : INotificationHandler<DriverSuspendedEvent>
     {
-        private readonly ILogger<DriverSuspendedEventHandler> _logger;
+        private readonly ILogger<DriverReinstatedEventHandler> _logger;
         private readonly INotificationsService _notificationsService;
         private readonly IRepositoryDriver _repository;
 
-        public DriverSuspendedEventHandler(ILogger<DriverSuspendedEventHandler> logger, INotificationsService notificationsService,
+        public DriverReinstatedEventHandler(ILogger<DriverReinstatedEventHandler> logger, INotificationsService notificationsService,
                                            IRepositoryDriver repository)
         {
             _logger = logger;
@@ -48,8 +47,8 @@ namespace EcoFleet.Application.UseCases.Drivers.EventHandlers.EventDriverReinsta
                 throw new NotFoundException(nameof(Driver), notification.DriverId.Value);
             }
 
-            var driverDTO = DriverSuspendedEventDTO.FromEntity(driver);
-            await _notificationsService.SendDriverSuspendedNotification(driverDTO);
+            var driverDTO = DriverReinstatedEventDTO.FromEntity(driver);
+            await _notificationsService.SendDriverReinstatedNotification(driverDTO);
 
             await Task.CompletedTask;
         }

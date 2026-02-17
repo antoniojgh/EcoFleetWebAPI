@@ -1,8 +1,8 @@
 ﻿using EcoFleet.Domain.Entities;
 
-namespace EcoFleet.Application.UseCases.Drivers.EventHandlers.EventDriverSuspended
+namespace EcoFleet.Application.UseCases.Drivers.EventHandlers.EventDriverReinstated
 {
-    public record DriverSuspendedEventDTO(
+    public record DriverReinstatedEventDTO(
         Guid Id,
         string FirstName,
         string LastName,
@@ -12,7 +12,7 @@ namespace EcoFleet.Application.UseCases.Drivers.EventHandlers.EventDriverSuspend
         DateTime? DateOfBirth
     )
     {
-        public static DriverSuspendedEventDTO FromEntity(Driver driver) =>
+        public static DriverReinstatedEventDTO FromEntity(Driver driver) =>
             new(
                 driver.Id.Value,
                 driver.Name.FirstName,
