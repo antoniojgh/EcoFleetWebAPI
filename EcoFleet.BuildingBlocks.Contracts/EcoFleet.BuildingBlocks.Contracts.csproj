@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>EcoFleet.BuildingBlocks.Contracts</RootNamespace>
+    <AssemblyName>EcoFleet.BuildingBlocks.Contracts</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--
+      MassTransit.Abstractions provides IConsumer<T>, ConsumeContext<T>, and
+      message topology attributes without pulling in the full transport stack.
+      Each microservice's *.API project will reference MassTransit.RabbitMQ.
+    -->
+    <PackageReference Include="MassTransit.Abstractions" Version="9.*" />
+  </ItemGroup>
+
+</Project>
