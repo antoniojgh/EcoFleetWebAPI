@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="14.0.0" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.2" />
+    <PackageReference Include="MassTransit.Abstractions" Version="8.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EcoFleet.DriverService.Domain\EcoFleet.DriverService.Domain.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\EcoFleet.BuildingBlocks.Application\EcoFleet.BuildingBlocks.Application.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\EcoFleet.BuildingBlocks.Contracts\EcoFleet.BuildingBlocks.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

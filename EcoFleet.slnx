@@ -16,4 +16,16 @@
     <Project Path="EcoFleet.Application.UnitTests/EcoFleet.Application.UnitTests.csproj" Id="430678c4-3fbf-4137-953e-83ca43f97964" />
     <Project Path="EcoFleet.Domain.UnitTests/EcoFleet.Domain.UnitTests.csproj" Id="7fe65724-bdb9-4e43-816f-1cde16a01f5a" />
   </Folder>
+  <Folder Name="/src/">
+    <Folder Name="/src/BuildingBlocks/">
+      <Project Path="src/BuildingBlocks/EcoFleet.BuildingBlocks.Domain/EcoFleet.BuildingBlocks.Domain.csproj" />
+      <Project Path="src/BuildingBlocks/EcoFleet.BuildingBlocks.Application/EcoFleet.BuildingBlocks.Application.csproj" />
+      <Project Path="src/BuildingBlocks/EcoFleet.BuildingBlocks.Contracts/EcoFleet.BuildingBlocks.Contracts.csproj" />
+    </Folder>
+    <Folder Name="/src/Services/DriverService/">
+      <Project Path="src/Services/DriverService/EcoFleet.DriverService.Domain/EcoFleet.DriverService.Domain.csproj" />
+      <Project Path="src/Services/DriverService/EcoFleet.DriverService.Application/EcoFleet.DriverService.Application.csproj" />
+      <Project Path="src/Services/DriverService/EcoFleet.DriverService.Infrastructure/EcoFleet.DriverService.Infrastructure.csproj" />
+    </Folder>
+  </Folder>
 </Solution>
